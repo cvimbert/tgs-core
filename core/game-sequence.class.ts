@@ -23,16 +23,22 @@ export class GameSequence {
     let block: GameBlockModel = this.structureData.blocks[blockId];
 
     let lines: string[] = this.getBlockTextLines(block.lines);
-    console.log("lines", lines);
+    //console.log("lines", lines);
 
     let paragraphs: string[] = this.stringsToParagraphs(lines);
-    this.sequence.paragraphs = paragraphs;
-    console.log("paragraphs", paragraphs);
+    this.sequence.paragraphs.push(...paragraphs);
+    //console.log("paragraphs", paragraphs);
 
     let links: LinkModel[] = this.getBlockLinks(block.links);
-    this.sequence.links = links;
 
-    console.log("sequence", this.sequence);
+    // if pas utile
+    if (links) {
+      this.sequence.links = links;
+    } else {
+      this.sequence.links = [];
+    }
+
+    //console.log("sequence", this.sequence);
   }
 
   getBlockTextLines(lines: GameBlockLineModel[]): string[] {
@@ -57,10 +63,12 @@ export class GameSequence {
   getBlockLinks(blockLinks: LinkModel[]): LinkModel[] {
     let links: LinkModel[] = [];
 
-    blockLinks.forEach(link => {
-      // évaluation potentielle de la condition
-      links.push(link);
-    });
+    if (blockLinks) {
+      blockLinks.forEach(link => {
+        // évaluation potentielle de la condition
+        links.push(link);
+      });
+    }
 
     return links;
   }
