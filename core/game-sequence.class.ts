@@ -1,5 +1,7 @@
-import { MainStructure, GameBlockModel, GameBlockLineModel, BlockLineType, LinkModel } from 'tgs-model'
+import { MainStructure, GameBlockModel, GameBlockLineModel, BlockLineType, LinkModel, ConditionModel } from 'tgs-model'
 import { SequenceStructure } from './data-interfaces/sequence-structure.interface';
+import { Condition } from './condition.class';
+import { GameContext } from './game-context.class';
 
 export class GameSequence {
 
@@ -12,7 +14,11 @@ export class GameSequence {
 
   constructor(
     public structureData: MainStructure
-  ) {}
+  ) {
+    // pour debug
+    GameContext.addDebugConditions();
+    GameContext.addDebugVariables();
+  }
 
   init() {
     this.loadBlock(this.structureData.entryBlockId);
@@ -51,8 +57,10 @@ export class GameSequence {
           break;
 
         case BlockLineType.COMPLEX:
-          // TODO: ici, on a une condition à traiter
-          texts.push(...this.getBlockTextLines(line.lines));
+          if (this.evaluateCondition(line.condition)) {
+            texts.push(...this.getBlockTextLines(line.lines));
+          }
+
           break;
       }
     });
@@ -60,13 +68,23 @@ export class GameSequence {
     return texts;
   }
 
+  evaluateCondition(model: ConditionModel): boolean {
+    if (!model) {
+      return true;
+    } else {
+      // c'est là que les choses sérieuses commencent
+      return Condition.evaluateInContext(model);
+    }
+  }
+
   getBlockLinks(blockLinks: LinkModel[]): LinkModel[] {
     let links: LinkModel[] = [];
 
     if (blockLinks) {
       blockLinks.forEach(link => {
-        // évaluation potentielle de la condition
-        links.push(link);
+        if (this.evaluateCondition(link.condition)) {
+          links.push(link);
+        }
       });
     }
 
