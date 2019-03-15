@@ -72,7 +72,6 @@ export class GameSequence {
     if (!model) {
       return true;
     } else {
-      // c'est là que les choses sérieuses commencent
       return Condition.evaluateInContext(model);
     }
   }
@@ -81,11 +80,7 @@ export class GameSequence {
     let links: LinkModel[] = [];
 
     if (blockLinks) {
-      blockLinks.forEach(link => {
-        if (this.evaluateCondition(link.condition)) {
-          links.push(link);
-        }
-      });
+      return blockLinks.filter(link => this.evaluateCondition(link.condition));
     }
 
     return links;
