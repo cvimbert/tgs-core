@@ -18,11 +18,15 @@ export class GameContext {
   }
 
   static getVariable(variableName: string): any {
-    if (this.variablesStore[variableName]) {
+    if (this.variablesStore[variableName] !== undefined) {
       return this.variablesStore[variableName];
     } else {
       console.error(`No variable named '${ variableName }' in store.`);
     }
+  }
+
+  static setVariable(variableName: string, value: any) {
+    this.variablesStore[variableName] = value;
   }
 
   static addDebugVariables() {

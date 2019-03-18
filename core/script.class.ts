@@ -1,6 +1,4 @@
-import { ScriptModel, ScriptInstructionModel, ScriptInstructionType } from "tgs-model";
-import { GameContext } from "./game-context.class";
-import { Condition } from "./condition.class";
+import { ScriptModel } from "tgs-model";
 import { Instruction } from "./instruction.class";
 
 export class Script {
@@ -8,20 +6,12 @@ export class Script {
   instructions: Instruction[];
 
   constructor(
-    private model: ScriptModel
-  ) {}
+    model: ScriptModel
+  ) {
+    this.instructions = model.instructions.map(instructionModel => new Instruction(instructionModel));
+  }
 
   execute() {
-    this.executeInstructions(this.model.instructions);
+    this.instructions.forEach(instruction => instruction.execute());
   }
-
-  executeInstructions(models: ScriptInstructionModel[]) {
-    models.forEach(model => this.executeInstruction(model));
-  }
-
-  executeInstruction(instructionModel: ScriptInstructionModel) {
-
-  }
-
-
 }

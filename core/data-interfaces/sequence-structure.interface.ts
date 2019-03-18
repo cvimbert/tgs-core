@@ -1,6 +1,6 @@
 import { LinkModel } from "tgs-model";
 
 export interface SequenceStructure {
-  paragraphs: string[];
+  paragraphs: string[][];
   links: LinkModel[];
 }

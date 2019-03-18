@@ -2,10 +2,14 @@ import { MainStructure, GameBlockModel, GameBlockLineModel, BlockLineType, LinkM
 import { SequenceStructure } from './data-interfaces/sequence-structure.interface';
 import { Condition } from './condition.class';
 import { GameContext } from './game-context.class';
+import { Script } from './script.class';
 
 export class GameSequence {
 
   PARAGRAPH_SEPARATOR = "---";
+
+  scripts: {[key: string]: Script} = {};
+  styleStack: string[] = [];
 
   sequence: SequenceStructure = {
     paragraphs: [],
@@ -18,10 +22,19 @@ export class GameSequence {
     // pour debug
     GameContext.addDebugConditions();
     GameContext.addDebugVariables();
+
+    for (let key in structureData.scripts) {
+      this.scripts[key] = new Script(structureData.scripts[key]);
+    }
   }
 
   init() {
     this.loadBlock(this.structureData.entryBlockId);
+
+    // on devra peut-être attrendre que le contexte soit correctement initialisé
+    if (this.scripts["start"]) {
+      this.scripts["start"].execute();
+    }
   }
 
   loadBlock(blockId: string) {
@@ -32,8 +45,8 @@ export class GameSequence {
     //console.log("lines", lines);
 
     let paragraphs: string[] = this.stringsToParagraphs(lines);
-    this.sequence.paragraphs.push(...paragraphs);
-    //console.log("paragraphs", paragraphs);
+    this.sequence.paragraphs.push(paragraphs);
+    //console.log("paragraphs", this.sequence.paragraphs);
 
     let links: LinkModel[] = this.getBlockLinks(block.links);
 
@@ -62,10 +75,44 @@ export class GameSequence {
           }
 
           break;
+
+        case BlockLineType.FORMAT_OPENER:
+          this.styleStack.push(line.format);
+          console.log("stack", this.styleStack);
+          break;
+
+        case BlockLineType.FORMAT_CLOSER:
+          let index: number = this.styleStack.lastIndexOf(line.format);
+
+          if (index !== -1) {
+            this.styleStack.splice(index, 1);
+            console.log("stack", this.styleStack);
+          }
+
+          break;
       }
     });
 
     return texts;
+  }
+
+  getStyleStack(): string[] {
+    return this.styleStack.slice();
+  }
+
+  getClasses(): string {
+
+    let styles: string = "";
+
+    this.styleStack.forEach((styleName: string, index: number) => {
+      styles += styleName;
+
+      if (index < this.styleStack.length - 1) {
+        styles += "";
+      }
+    });
+
+    return styles;
   }
 
   evaluateCondition(model: ConditionModel): boolean {
