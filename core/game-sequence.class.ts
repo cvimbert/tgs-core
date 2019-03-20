@@ -3,6 +3,7 @@ import { SequenceStructure } from './data-interfaces/sequence-structure.interfac
 import { Condition } from './condition.class';
 import { GameContext } from './game-context.class';
 import { Script } from './script.class';
+import { TextUnit } from './data-interfaces/text-unit.interface';
 
 export class GameSequence {
 
@@ -15,6 +16,8 @@ export class GameSequence {
     paragraphs: [],
     links: []
   };
+
+  units: TextUnit[][] = [];
 
   constructor(
     public structureData: MainStructure
@@ -50,6 +53,8 @@ export class GameSequence {
 
     let links: LinkModel[] = this.getBlockLinks(block.links);
 
+    this.units.push(this.getTextUnits(block.lines));
+
     // if pas utile
     if (links) {
       this.sequence.links = links;
@@ -58,6 +63,34 @@ export class GameSequence {
     }
 
     //console.log("sequence", this.sequence);
+  }
+
+  getTextUnits(lines: GameBlockLineModel[]): TextUnit[] {
+    let units: TextUnit[] = [];
+
+    lines.forEach(line => {
+
+      let unit: TextUnit = {
+        styles: line.formats
+      };
+
+      switch(line.type) {
+        case BlockLineType.SIMPLE:
+          unit.text = line.text;
+          units.push(unit);
+          break;
+
+        case BlockLineType.COMPLEX:
+          if (this.evaluateCondition(line.condition)) {
+            unit.units = this.getTextUnits(line.lines);
+            units.push(unit);
+          }
+
+          break;
+      }
+    });
+
+    return units;
   }
 
   getBlockTextLines(lines: GameBlockLineModel[]): string[] {
@@ -75,34 +108,21 @@ export class GameSequence {
           }
 
           break;
-
-        case BlockLineType.FORMAT_OPENER:
-          this.styleStack.push(line.format);
-          console.log("stack", this.styleStack);
-          break;
-
-        case BlockLineType.FORMAT_CLOSER:
-          let index: number = this.styleStack.lastIndexOf(line.format);
-
-          if (index !== -1) {
-            this.styleStack.splice(index, 1);
-            console.log("stack", this.styleStack);
-          }
-
-          break;
       }
     });
 
     return texts;
   }
 
+  // plus utile
   getStyleStack(): string[] {
     return this.styleStack.slice();
   }
 
+  // plus utile
   getClasses(): string {
 
-    let styles: string = "";
+    let styles = "";
 
     this.styleStack.forEach((styleName: string, index: number) => {
       styles += styleName;
