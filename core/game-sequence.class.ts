@@ -74,7 +74,7 @@ export class GameSequence {
 
       switch(line.type) {
         case BlockLineType.SIMPLE:
-          unit.text = line.text;
+          unit.text = this.replaceVariables(line.text);
           units.push(unit);
           break;
 
@@ -94,6 +94,21 @@ export class GameSequence {
     });
 
     return units;
+  }
+
+  replaceVariables(text: string): string {
+    let exp = /%([A-Za-z0-9.]+)%/;
+    let res: RegExpExecArray;
+
+    while(res = exp.exec(text)) {
+      let varName: string = res[1];
+      let replacement: any = GameContext.getVariable(varName);
+      text = text.replace(res[0], replacement);
+      //console.log(res);
+    }
+
+    //console.log(text);
+    return text;
   }
 
   evaluateCondition(model: ConditionModel): boolean {
