@@ -2,8 +2,17 @@ import { Condition } from "./condition.class";
 
 export class GameContext {
 
+  static initialized: boolean = false;
+
   static conditionsStore: {[key: string]: Condition} = {};
   static variablesStore: {[key: string]: any} = {};
+
+  static init() {
+    if (!this.initialized) {
+      this.load();
+      this.initialized = true;
+    }
+  }
 
   static getCondition(conditionName: string): Condition {
     if (this.conditionsStore[conditionName]) {
@@ -11,10 +20,6 @@ export class GameContext {
     } else {
       console.error(`No condition named '${ conditionName }' in store.`);
     }
-  }
-
-  static addDebugConditions() {
-    //this.conditionsStore["variableTest"] = new Condition(null);
   }
 
   static getVariable(variableName: string): any {
@@ -29,8 +34,24 @@ export class GameContext {
     this.variablesStore[variableName] = value;
   }
 
-  static addDebugVariables() {
-    this.variablesStore["variableTest"] = 8;
+  static saveToLocalStorage() {
+    localStorage.setItem("variables", JSON.stringify(this.variablesStore));
+  }
+
+  static loadFromLocalStorage() {
+    let variablesText: string = localStorage.getItem("variables");
+
+    if (variablesText && variablesText !== "") {
+      this.variablesStore = JSON.parse(variablesText);
+    }
+  }
+
+  static save() {
+    this.saveToLocalStorage();
+  }
+
+  static load() {
+    this.loadFromLocalStorage();
   }
 
 }

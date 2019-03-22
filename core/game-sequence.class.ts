@@ -22,10 +22,6 @@ export class GameSequence {
   constructor(
     public structureData: MainStructure
   ) {
-    // pour debug
-    GameContext.addDebugConditions();
-    GameContext.addDebugVariables();
-
     for (let key in structureData.scripts) {
       this.scripts[key] = new Script(structureData.scripts[key]);
     }
@@ -59,7 +55,8 @@ export class GameSequence {
     } else {
       this.sequence.links = [];
     }
-
+    
+    GameContext.save();
     //console.log("sequence", this.sequence);
   }
 
