@@ -37,6 +37,9 @@ export class GameContext {
   static setVariable(variableName: string, value: any) {
     this.variablesStore[variableName] = value;
     this.dataSaver.setVariable(variableName, value);
+
+    // temp
+    this.dataSaver.save();
   }
 
   static saveToLocalStorage() {
@@ -58,6 +61,14 @@ export class GameContext {
 
   static load() {
     this.loadFromLocalStorage();
+  }
+
+  static onSequenceLoaded(sequenceId: string) {
+    this.dataSaver.addStep(sequenceId);
+  }
+
+  static onBlockLoaded(blockId: string) {
+    this.dataSaver.addSequenceStep(blockId);
   }
 
 }

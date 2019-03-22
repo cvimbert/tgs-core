@@ -27,17 +27,22 @@ export class GameSequence {
     }
   }
 
-  init(fromSave: boolean = false) {
+  init(sequenceId: string, fromSave: boolean = false) {
     // on devra peut-être attendre que le contexte soit correctement initialisé
+    GameContext.onSequenceLoaded(sequenceId);
+
     if (this.scripts["init"]) {
       this.scripts["init"].execute();
     }
 
+    
 
     this.loadBlock(this.structureData.entryBlockId);
   }
 
   loadBlock(blockId: string) {
+    
+    GameContext.onBlockLoaded(blockId);
 
     let block: GameBlockModel = this.structureData.blocks[blockId];
     let links: LinkModel[] = this.getBlockLinks(block.links);

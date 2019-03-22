@@ -7,7 +7,16 @@ export class IncrementalDataSaver {
     currentStep: GameStep;
 
     constructor() {
-        this.load();
+
+        // temporairement
+
+        //this.load();
+
+        /*if (this.steps.length > 0) {
+            this.currentStep = this.steps[0];
+        }*/
+
+        this.steps = [];
     }
 
     private saveToLocalStorage() {
@@ -40,26 +49,62 @@ export class IncrementalDataSaver {
 
     addStep(sequenceId: string) {
 
-        this.currentStep = {
-            sequenceId: sequenceId,
-            steps: []
-        };
+        // peut-être pas très futé (cas où on reprend d'une sauvegarde existante) - Pour débug
+        // sécurité pour ne pas créer un nouveau step
 
-        this.steps.push(this.currentStep);
+        if (!this.currentStep || this.currentStep.sequenceId !== sequenceId) {
+            this.currentStep = {
+                sequenceId: sequenceId,
+                steps: [],
+                variables: {}
+            };
+    
+            this.steps.push(this.currentStep);
+        }
     }
 
     addSequenceStep(blockId: string) {
-        this.currentStep.steps.push({
-            blockId: blockId,
-            variableUpdates: {}
-        });
+        let lastSequenceStep: SequenceStep = this.lastSequenceStep;
+
+        if (!lastSequenceStep || lastSequenceStep.blockId !== blockId) {
+            this.currentStep.steps.push({
+                blockId: blockId,
+                variables: {}
+            });
+        }
+
+        console.log("variables", this.getCurrentVariables());
     }
 
     setVariable(name: string, value: any) {
         let lastSequenceStep: SequenceStep = this.lastSequenceStep;
 
         if (lastSequenceStep) {
-            lastSequenceStep.variableUpdates[name] = value;
+            lastSequenceStep.variables[name] = value;
+        } else {
+            this.currentStep.variables[name] = value;
         }
+    }
+
+    getCurrentVariables(): {[key: string]: any} {
+        let variables: {[key: string]: any} = {};
+
+        this.steps.forEach(saverStep => {
+            this.mergeObjects(variables, saverStep.variables);
+
+            saverStep.steps.forEach(sequenceStep => {
+                this.mergeObjects(variables, sequenceStep.variables);
+            });
+        });
+
+        return variables;
+    }
+
+    private mergeObjects(object1: Object, object2: Object): Object {
+        for (let key in object2) {
+            object1[key] = object2[key];
+        }
+
+        return object1;
     }
 }
