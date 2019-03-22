@@ -1,4 +1,5 @@
 import { Condition } from "./condition.class";
+import { IncrementalDataSaver } from "./saver/incremental-data-saver.class";
 
 export class GameContext {
 
@@ -7,8 +8,11 @@ export class GameContext {
   static conditionsStore: {[key: string]: Condition} = {};
   static variablesStore: {[key: string]: any} = {};
 
+  static dataSaver: IncrementalDataSaver;
+
   static init() {
     if (!this.initialized) {
+      this.dataSaver = new IncrementalDataSaver();
       this.load();
       this.initialized = true;
     }
@@ -32,6 +36,7 @@ export class GameContext {
 
   static setVariable(variableName: string, value: any) {
     this.variablesStore[variableName] = value;
+    this.dataSaver.setVariable(variableName, value);
   }
 
   static saveToLocalStorage() {
@@ -47,6 +52,7 @@ export class GameContext {
   }
 
   static save() {
+    this.dataSaver.save();
     this.saveToLocalStorage();
   }
 

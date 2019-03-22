@@ -27,11 +27,12 @@ export class GameSequence {
     }
   }
 
-  init() {
+  init(fromSave: boolean = false) {
     // on devra peut-être attendre que le contexte soit correctement initialisé
     if (this.scripts["init"]) {
       this.scripts["init"].execute();
     }
+
 
     this.loadBlock(this.structureData.entryBlockId);
   }
