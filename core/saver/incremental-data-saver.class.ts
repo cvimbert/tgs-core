@@ -19,6 +19,16 @@ export class IncrementalDataSaver {
         this.steps = [];
     }
 
+    init(): boolean {
+        this.load();
+
+        if (this.steps.length === 0) {
+            return false;
+        }
+
+        return true;
+    }
+
     private saveToLocalStorage() {
         localStorage.setItem("steps", JSON.stringify(this.steps));
     }

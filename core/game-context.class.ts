@@ -6,16 +6,20 @@ export class GameContext {
   static initialized: boolean = false;
 
   static conditionsStore: {[key: string]: Condition} = {};
+
+  // extraction du contexte courant (ou à un point déterminé)
   static variablesStore: {[key: string]: any} = {};
 
   static dataSaver: IncrementalDataSaver;
 
-  static init() {
+  static init(): boolean {
     if (!this.initialized) {
       this.dataSaver = new IncrementalDataSaver();
       this.load();
       this.initialized = true;
     }
+
+    return this.dataSaver.init();
   }
 
   static getCondition(conditionName: string): Condition {
