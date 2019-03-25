@@ -11,7 +11,6 @@ export class GameManager {
 
   currentSequence: GameSequence;
   sequence: GameSequence;
-  structure: SequenceStructure;
 
   loading: boolean = false;
 
@@ -23,9 +22,9 @@ export class GameManager {
 
   initGame(alreadyLaunched: boolean) {
     // deux cas possible
-    // 1- Pas de partie lançée
+    // 1- Pas de partie lancée
     // dans ce cas on crée une sauvegarde vide
-    // 2- Une partie est séjà lancée
+    // 2- Une partie est déjà lancée
     // dans ce cas, on chargé les données de la séquence en cours, pour initialisation dans ce contexte
 
     if (alreadyLaunched) {
@@ -38,14 +37,22 @@ export class GameManager {
   }
 
   newGame() {
-    this.loadFile(this.configuration.rootSequence);
+    this.loadFile(this.configuration.rootSequence).then(sequence => {
+      sequence.init(this.configuration.rootSequence);
+      this.currentSequence = this.sequence;
+    });
   }
 
   loadGameFromSave() {
-    console.log(GameContext.dataSaver.currentStep);
+    //console.log(GameContext.dataSaver.currentStep);
+    let sequenceId: string = GameContext.dataSaver.currentStep.sequenceId;
+    this.loadFile(sequenceId).then(sequence => {
+      sequence.initFromSave(GameContext.dataSaver.currentStep);
+      this.currentSequence = this.sequence;
+    });
   }
 
-  loadFile(path: string): Promise<GameSequence> {
+  loadFile(path: string, fromSave: boolean = false): Promise<GameSequence> {
 
     this.loading = true;
 
@@ -56,13 +63,8 @@ export class GameManager {
       this.parser.loadTGSFile(assetsFolder + "tgs/" + path + ".tgs").then((resp: ParsingResult) => {
         let structure: MainStructure = MainStructure.loadFromParsingResult(resp);
         this.sequence = new GameSequence(structure);
-        this.sequence.init(path);
-        this.structure = this.sequence.sequence;
-
-        this.currentSequence = this.sequence;
-        success(this.sequence);
-
         this.loading = false;
+        success(this.sequence);
       });
     });
   }
