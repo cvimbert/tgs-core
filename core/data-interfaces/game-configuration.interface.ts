@@ -1,3 +1,4 @@
 export interface GameConfiguration {
-    assetsFolder: string;
+    assetsFolder?: string;
+    rootSequence: string;
 }

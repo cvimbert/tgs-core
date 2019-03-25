@@ -7,46 +7,63 @@ import { SequenceStructure } from "./data-interfaces/sequence-structure.interfac
 
 export class GameManager {
 
-    currentSequence: GameSequence;
-    sequence: GameSequence;
-    structure: SequenceStructure;
+  private parser: TGSParser = new TGSParser();
 
-    constructor(
-        public configuration: GameConfiguration = null
-    ) {
-      this.initGame(GameContext.init());
+  currentSequence: GameSequence;
+  sequence: GameSequence;
+  structure: SequenceStructure;
+
+  loading: boolean = false;
+
+  constructor(
+    public configuration: GameConfiguration = null
+  ) {
+    this.initGame(GameContext.init());
+  }
+
+  initGame(alreadyLaunched: boolean) {
+    // deux cas possible
+    // 1- Pas de partie lançée
+    // dans ce cas on crée une sauvegarde vide
+    // 2- Une partie est séjà lancée
+    // dans ce cas, on chargé les données de la séquence en cours, pour initialisation dans ce contexte
+
+    if (alreadyLaunched) {
+      console.log("On a des données");
+      this.loadGameFromSave();
+    } else {
+      console.log("Pas de données");
+      this.newGame();
     }
+  }
 
-    initGame(alreadyLaunched: boolean) {
-      // deux cas possible
-      // 1- Pas de partie lançée
-      // dans ce cas on crée une sauvegarde vide
-      // 2- Une partie est séjà lancée
-      // dans ce cas, on chargé les données de la séquence en cours, pour initialisation dans ce contexte
+  newGame() {
+    this.loadFile(this.configuration.rootSequence);
+  }
 
-      if (alreadyLaunched) {
+  loadGameFromSave() {
+    console.log(GameContext.dataSaver.currentStep);
+  }
 
-      } else {
+  loadFile(path: string): Promise<GameSequence> {
 
-      }
+    this.loading = true;
 
-    }
+    return new Promise<GameSequence>((success: Function) => {
 
-    loadFile(path: string): Promise<GameSequence> {
+      let assetsFolder: string = this.configuration.assetsFolder || "";
 
-        return new Promise<GameSequence>((success: Function) => {
+      this.parser.loadTGSFile(assetsFolder + "tgs/" + path + ".tgs").then((resp: ParsingResult) => {
+        let structure: MainStructure = MainStructure.loadFromParsingResult(resp);
+        this.sequence = new GameSequence(structure);
+        this.sequence.init(path);
+        this.structure = this.sequence.sequence;
 
-          let parser: TGSParser = new TGSParser();
+        this.currentSequence = this.sequence;
+        success(this.sequence);
 
-          let assetsFolder: string = this.configuration.assetsFolder || "";
-
-          parser.loadTGSFile(assetsFolder + "tgs/" + path + ".tgs").then((resp: ParsingResult) => {
-            let structure: MainStructure = MainStructure.loadFromParsingResult(resp);
-            let sequence = new GameSequence(structure);
-            sequence.init(path);
-            this.currentSequence = sequence;
-            success(sequence);
-          });
-        });
-      }
+        this.loading = false;
+      });
+    });
+  }
 }

@@ -26,6 +26,7 @@ export class IncrementalDataSaver {
             return false;
         }
 
+        this.currentStep = this.steps[this.steps.length - 1];
         return true;
     }
 
@@ -83,7 +84,7 @@ export class IncrementalDataSaver {
             });
         }
 
-        console.log("variables", this.getCurrentVariables());
+        //console.log("variables", this.getCurrentVariables());
     }
 
     setVariable(name: string, value: any) {
