@@ -3,20 +3,11 @@ import { SequenceStep } from "./interfaces/sequence-step.interface";
 
 export class IncrementalDataSaver {
 
-    private steps: GameStep[];
+    private steps: GameStep[] = [];
     currentStep: GameStep;
 
     constructor() {
-
-        // temporairement
-
-        //this.load();
-
-        /*if (this.steps.length > 0) {
-            this.currentStep = this.steps[0];
-        }*/
-
-        this.steps = [];
+        
     }
 
     init(): boolean {
@@ -109,6 +100,12 @@ export class IncrementalDataSaver {
         });
 
         return variables;
+    }
+
+    clear() {
+        localStorage.setItem("steps", "");
+        this.steps = [];
+        this.currentStep = null;
     }
 
     private mergeObjects(object1: Object, object2: Object): Object {

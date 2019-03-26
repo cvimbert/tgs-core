@@ -43,15 +43,20 @@ export class GameSequence {
     this.units.push(this.getTextUnits(block.lines));
 
     // execution des scripts locaux, à voir si on les éxécute toujours
-    if (block.scripts && block.scripts["start"]) {
-      let script: Script = new Script(block.scripts["start"]);
-      script.execute();
-    }
+    this.executeBlockScript(block, "init");
+    this.executeBlockScript(block, "head");
      
     this.links = links || [];
     
     GameContext.save();
     //console.log("sequence", this.sequence);
+  }
+
+  executeBlockScript(block: GameBlockModel, scriptId: string) {
+    if (block.scripts && block.scripts[scriptId]) {
+      let script: Script = new Script(block.scripts[scriptId]);
+      script.execute();
+    }
   }
 
   initFromSave(step: GameStep) {
@@ -62,6 +67,10 @@ export class GameSequence {
 
       if (index === step.steps.length - 1) {
         this.links = this.getLinks(sequenceStep.blockId) || [];
+
+        let block: GameBlockModel = this.structureData.blocks[sequenceStep.blockId];
+
+        this.executeBlockScript(block, "head");
       }
     });
   }

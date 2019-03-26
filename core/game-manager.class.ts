@@ -53,7 +53,9 @@ export class GameManager {
   }
 
   resetGame() {
-    console.log("game reset");
+    //console.log("game reset");
+    GameContext.clearGame();
+    this.newGame();
   }
 
   getVariables(): {[key: string]: any} {

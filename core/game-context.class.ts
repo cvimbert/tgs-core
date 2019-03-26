@@ -62,6 +62,10 @@ export class GameContext {
     this.dataSaver.save();
   }
 
+  static clearGame() {
+    this.dataSaver.clear();
+  }
+
   static extractVariables() {
     this.variablesStore = this.dataSaver.getCurrentVariables();
   }
