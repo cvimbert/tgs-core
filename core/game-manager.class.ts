@@ -21,7 +21,7 @@ export class GameManager {
   }
 
   initGame(alreadyLaunched: boolean) {
-    // deux cas possible
+    // Deux cas possible
     // 1- Pas de partie lancée
     // dans ce cas on crée une sauvegarde vide
     // 2- Une partie est déjà lancée
@@ -45,6 +45,7 @@ export class GameManager {
 
   loadGameFromSave() {
     //console.log(GameContext.dataSaver.currentStep);
+    GameContext.extractVariables();
     let sequenceId: string = GameContext.dataSaver.currentStep.sequenceId;
     this.loadFile(sequenceId).then(sequence => {
       sequence.initFromSave(GameContext.dataSaver.currentStep);
@@ -52,7 +53,11 @@ export class GameManager {
     });
   }
 
-  loadFile(path: string, fromSave: boolean = false): Promise<GameSequence> {
+  resetGame() {
+    console.log("game reset");
+  }
+
+  loadFile(path: string): Promise<GameSequence> {
 
     this.loading = true;
 

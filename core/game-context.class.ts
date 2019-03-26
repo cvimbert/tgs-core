@@ -15,7 +15,6 @@ export class GameContext {
   static init(): boolean {
     if (!this.initialized) {
       this.dataSaver = new IncrementalDataSaver();
-      this.load();
       this.initialized = true;
     }
 
@@ -46,25 +45,12 @@ export class GameContext {
     this.dataSaver.save();
   }
 
-  static saveToLocalStorage() {
-    localStorage.setItem("variables", JSON.stringify(this.variablesStore));
-  }
-
-  static loadFromLocalStorage() {
-    let variablesText: string = localStorage.getItem("variables");
-
-    if (variablesText && variablesText !== "") {
-      this.variablesStore = JSON.parse(variablesText);
-    }
-  }
-
   static save() {
     this.dataSaver.save();
-    this.saveToLocalStorage();
   }
 
-  static load() {
-    this.loadFromLocalStorage();
+  static extractVariables() {
+    this.variablesStore = this.dataSaver.getCurrentVariables();
   }
 
   static onSequenceLoaded(sequenceId: string) {
