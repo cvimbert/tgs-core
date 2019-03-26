@@ -3,7 +3,6 @@ import { GameSequence } from "./game-sequence.class";
 import { TGSParser, ParsingResult } from "tgs-parser";
 import { MainStructure } from "tgs-model";
 import { GameContext } from "./game-context.class";
-import { SequenceStructure } from "./data-interfaces/sequence-structure.interface";
 
 export class GameManager {
 
@@ -55,6 +54,14 @@ export class GameManager {
 
   resetGame() {
     console.log("game reset");
+  }
+
+  getVariables(): {[key: string]: any} {
+    return GameContext.variablesStore;
+  }
+
+  setVariable(name: string, value: any, type: string = null) {
+    GameContext.setVariable(name, value, type);
   }
 
   loadFile(path: string): Promise<GameSequence> {

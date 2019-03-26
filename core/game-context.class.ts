@@ -37,7 +37,20 @@ export class GameContext {
     }
   }
 
-  static setVariable(variableName: string, value: any) {
+  static setVariable(variableName: string, value: any, type: string = null) {
+
+    if ((typeof value) === "string") {
+      switch(type) {
+        case "number":
+          value = +value;
+          break;
+  
+        case "boolean":
+          value = (value === "true");
+          break;
+      }
+    }
+
     this.variablesStore[variableName] = value;
     this.dataSaver.setVariable(variableName, value);
 
