@@ -64,6 +64,7 @@ export class GameContext {
 
   static clearGame() {
     this.dataSaver.clear();
+    this.initialized = false;
   }
 
   static extractVariables() {

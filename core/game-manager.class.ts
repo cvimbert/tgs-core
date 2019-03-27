@@ -42,6 +42,13 @@ export class GameManager {
     });
   }
 
+  loadSequence(sequenceId: string, blockId: string) {
+    this.loadFile(sequenceId).then(sequence => {
+      sequence.init(sequenceId, blockId);
+      this.currentSequence = this.sequence;
+    });
+  }
+
   loadGameFromSave() {
     //console.log(GameContext.dataSaver.currentStep);
     GameContext.extractVariables();

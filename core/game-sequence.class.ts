@@ -6,7 +6,6 @@ import { Script } from './script.class';
 import { TextUnit } from './data-interfaces/text-unit.interface';
 import { GameStep } from './saver/interfaces/game-step.interface';
 import { SequenceStep } from './saver/interfaces/sequence-step.interface';
-import { TgsLoadingService } from 'src/app/game-structure/tgs-loading.service';
 import { GameManager } from './game-manager.class';
 
 export class GameSequence {
@@ -18,14 +17,14 @@ export class GameSequence {
 
   constructor(
     public structureData: MainStructure,
-    private gameManager: GameManager
+    private manager: GameManager
   ) {
     for (let key in structureData.scripts) {
       this.scripts[key] = new Script(structureData.scripts[key]);
     }
   }
 
-  init(sequenceId: string) {
+  init(sequenceId: string, blockId?: string) {
     // on devra peut-être attendre que le contexte soit correctement initialisé
     GameContext.onSequenceLoaded(sequenceId);
 
@@ -34,7 +33,7 @@ export class GameSequence {
       this.scripts["init"].execute();
     }
 
-    this.loadBlock(this.structureData.entryBlockId);
+    this.loadBlock(blockId || this.structureData.entryBlockId);
   }
 
   loadBlock(blockId: string) {
@@ -56,7 +55,7 @@ export class GameSequence {
   }
 
   navigateToSequence(sequenceId: string, blockId: string) {
-
+    this.manager.loadSequence(sequenceId, blockId);
   }
 
   executeBlockScript(block: GameBlockModel, scriptId: string) {
