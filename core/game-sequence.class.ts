@@ -6,6 +6,8 @@ import { Script } from './script.class';
 import { TextUnit } from './data-interfaces/text-unit.interface';
 import { GameStep } from './saver/interfaces/game-step.interface';
 import { SequenceStep } from './saver/interfaces/sequence-step.interface';
+import { TgsLoadingService } from 'src/app/game-structure/tgs-loading.service';
+import { GameManager } from './game-manager.class';
 
 export class GameSequence {
 
@@ -15,7 +17,8 @@ export class GameSequence {
   links: LinkModel[];
 
   constructor(
-    public structureData: MainStructure
+    public structureData: MainStructure,
+    private gameManager: GameManager
   ) {
     for (let key in structureData.scripts) {
       this.scripts[key] = new Script(structureData.scripts[key]);
@@ -50,6 +53,10 @@ export class GameSequence {
     
     GameContext.save();
     //console.log("sequence", this.sequence);
+  }
+
+  navigateToSequence(sequenceId: string, blockId: string) {
+
   }
 
   executeBlockScript(block: GameBlockModel, scriptId: string) {

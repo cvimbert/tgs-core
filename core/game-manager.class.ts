@@ -58,12 +58,17 @@ export class GameManager {
     this.newGame();
   }
 
+  refreshGame() {
+    // un peu brutal, mais bon...
+    this.loadGameFromSave();
+  }
+
   getVariables(): {[key: string]: any} {
     return GameContext.variablesStore;
   }
 
-  setVariable(name: string, value: any, type: string = null) {
-    GameContext.setVariable(name, value, type);
+  setVariable(name: string, value: any, forcedType: string = null) {
+    GameContext.setVariable(name, value, forcedType);
   }
 
   loadFile(path: string): Promise<GameSequence> {
@@ -76,7 +81,7 @@ export class GameManager {
 
       this.parser.loadTGSFile(assetsFolder + "tgs/" + path + ".tgs").then((resp: ParsingResult) => {
         let structure: MainStructure = MainStructure.loadFromParsingResult(resp);
-        this.sequence = new GameSequence(structure);
+        this.sequence = new GameSequence(structure, this);
         this.loading = false;
         success(this.sequence);
       });

@@ -37,10 +37,10 @@ export class GameContext {
     }
   }
 
-  static setVariable(variableName: string, value: any, type: string = null) {
+  static setVariable(variableName: string, value: any, forcedType: string = null) {
 
     if ((typeof value) === "string") {
-      switch(type) {
+      switch(forcedType) {
         case "number":
           value = +value;
           break;
