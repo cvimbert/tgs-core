@@ -102,6 +102,20 @@ export class IncrementalDataSaver {
         return variables;
     }
 
+    removeLast() {
+        if (this.currentStep.steps.length > 1) {
+            this.currentStep.steps.pop();
+            this.save();
+            //console.log("suppression au sein de la séquence");
+        } else if (this.steps.length > 1) {
+            this.steps.pop();
+            this.save();
+            //console.log("suppression de séquence");
+        } else  {
+            console.log("can't go back");
+        }
+    }
+
     clear() {
         localStorage.setItem("steps", "");
         this.steps = [];

@@ -70,6 +70,11 @@ export class GameManager {
     this.loadGameFromSave();
   }
 
+  goBack() {
+    GameContext.dataSaver.removeLast();
+    this.initGame(GameContext.init());
+  }
+
   getVariables(): {[key: string]: any} {
     return GameContext.variablesStore;
   }
