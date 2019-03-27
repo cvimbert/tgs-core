@@ -20,6 +20,8 @@ export class Instruction {
       if (model.commandArguments) {
         this.arguments = model.commandArguments.map(argumentModel => new Argument(argumentModel));
       }
+    } else if (model.type === ScriptInstructionType.ASSIGNATION) {
+      
     }
   }
 
