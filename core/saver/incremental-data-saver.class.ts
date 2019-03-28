@@ -125,6 +125,7 @@ export class IncrementalDataSaver {
         localStorage.setItem("steps", "");
         this.steps = [];
         this.currentStep = null;
+        this.save();
     }
 
     private mergeObjects(object1: Object, object2: Object): Object {
