@@ -29,11 +29,13 @@ export class GameContext {
     }
   }
 
-  static getVariable(variableName: string): any {
+  static getVariable(variableName: string, dispatchError = true): any {
     if (this.variablesStore[variableName] !== undefined) {
       return this.variablesStore[variableName];
     } else {
-      console.error(`No variable named '${ variableName }' in store.`);
+      if (dispatchError) {
+        console.error(`No variable named '${ variableName }' in store.`);
+      }
     }
   }
 
@@ -56,6 +58,10 @@ export class GameContext {
 
     // temp
     this.dataSaver.save();
+  }
+
+  static deleteVariable(variableName: string) {
+    delete this.variablesStore[variableName];
   }
 
   static save() {

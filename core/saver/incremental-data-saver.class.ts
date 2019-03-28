@@ -41,6 +41,11 @@ export class IncrementalDataSaver {
         }
     }
 
+    deleteVariable(variableName: string, inWholeTree: boolean = false) {
+        // suppression de l'arbre complet de sauvegarde, ou uniquement à partir du point local ?
+        
+    }
+
     save() {
         this.saveToLocalStorage();
     }

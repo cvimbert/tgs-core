@@ -2,6 +2,7 @@ import { ScriptInstructionModel, ScriptInstructionType } from "tgs-model";
 import { Condition } from "./condition.class";
 import { Argument } from "./argument.class";
 import { GameContext } from "./game-context.class";
+import { Assignation } from "./assignation.class";
 
 export class Instruction {
 
@@ -21,7 +22,7 @@ export class Instruction {
         this.arguments = model.commandArguments.map(argumentModel => new Argument(argumentModel));
       }
     } else if (model.type === ScriptInstructionType.ASSIGNATION) {
-      
+      // rien de particulier à enregistrer, à priori
     }
   }
 
@@ -35,6 +36,11 @@ export class Instruction {
         if (Condition.evaluateInContext(this.model.condition)) {
           this.executeInstructions();
         }
+        break;
+
+      case ScriptInstructionType.ASSIGNATION:
+        // la classe assignation n'est pas des plus utiles, mais on y gagne en clarté
+        Assignation.execute(this.model);
         break;
     }
   }

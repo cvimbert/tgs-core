@@ -41,12 +41,13 @@ export class GameSequence {
     GameContext.onBlockLoaded(blockId);
 
     let block: GameBlockModel = this.structureData.blocks[blockId];
-    let links: LinkModel[] = this.getBlockLinks(block.links);
-    this.units.push(this.getTextUnits(block.lines));
 
     // execution des scripts locaux, à voir si on les éxécute toujours
     this.executeBlockScript(block, "init");
     this.executeBlockScript(block, "head");
+    
+    let links: LinkModel[] = this.getBlockLinks(block.links);
+    this.units.push(this.getTextUnits(block.lines));
      
     this.links = links || [];
     
@@ -69,7 +70,6 @@ export class GameSequence {
     //console.log("step to reconstitute", step);
 
     step.steps.forEach((sequenceStep: SequenceStep, index: number) => {
-      this.units.push(this.getBlocks(sequenceStep.blockId));
 
       if (index === step.steps.length - 1) {
         this.links = this.getLinks(sequenceStep.blockId) || [];
@@ -78,6 +78,8 @@ export class GameSequence {
 
         this.executeBlockScript(block, "head");
       }
+
+      this.units.push(this.getBlocks(sequenceStep.blockId));
     });
   }
 
