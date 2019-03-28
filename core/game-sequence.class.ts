@@ -11,6 +11,7 @@ import { GameManager } from './game-manager.class';
 export class GameSequence {
 
   scripts: {[key: string]: Script} = {};
+  conditions: {[key: string]: Condition} = {};
 
   units: TextUnit[][] = [];
   links: LinkModel[];
@@ -21,6 +22,10 @@ export class GameSequence {
   ) {
     for (let key in structureData.scripts) {
       this.scripts[key] = new Script(structureData.scripts[key]);
+    }
+
+    for (let key in structureData.conditions) {
+      this.conditions[key] = new Condition(structureData.conditions[key]);
     }
   }
 
@@ -63,6 +68,22 @@ export class GameSequence {
     if (block.scripts && block.scripts[scriptId]) {
       let script: Script = new Script(block.scripts[scriptId]);
       script.execute();
+    }
+  }
+
+  executeScript(scriptId: string) {
+    if (this.scripts[scriptId]) {
+      this.scripts[scriptId].execute();
+    } else {
+      console.warn(`No script named "${scriptId}" to execute.`);
+    }
+  }
+
+  evaluateConditionById(conditionId: string): boolean {
+    if (this.conditions[conditionId]) {
+      return this.conditions[conditionId].evaluate();
+    } else {
+      console.warn(`No condition named "${conditionId}" to execute.`);
     }
   }
 
