@@ -57,6 +57,24 @@ export class GameSequence {
     this.links = links || [];
     
     GameContext.save();
+
+    if (block.redirections) {
+      // on teste les conditions de redirection une à une, en executant la premère valable
+
+      for (let redirection of block.redirections) {
+        if (redirection.condition) {
+          let condition = new Condition(redirection.condition);
+
+          if (condition.evaluate()) {
+            this.loadBlock(redirection.localLinkRef);
+            break;
+          }
+        } else {
+          this.loadBlock(redirection.localLinkRef);
+          break;
+        }
+      }
+    }
     //console.log("sequence", this.sequence);
   }
 
