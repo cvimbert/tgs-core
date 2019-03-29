@@ -6,7 +6,7 @@ import { GameContext } from "./game-context.class";
 
 export class GameManager {
 
-  private parser: TGSParser = new TGSParser();
+  protected parser: TGSParser = new TGSParser();
 
   currentSequence: GameSequence;
   sequence: GameSequence;
