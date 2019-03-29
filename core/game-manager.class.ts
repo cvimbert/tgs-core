@@ -15,7 +15,9 @@ export class GameManager {
 
   constructor(
     public configuration: GameConfiguration = null
-  ) {
+  ) {}
+
+  init() {
     this.initGame(GameContext.init());
   }
 
