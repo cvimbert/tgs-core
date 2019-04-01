@@ -187,7 +187,7 @@ export class GameSequence {
   }
 
   evaluateCondition(model: ConditionModel): boolean {
-    console.log(model)
+    //console.log(model)
     if (!model) {
       return true;
     } else {

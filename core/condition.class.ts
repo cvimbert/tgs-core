@@ -7,7 +7,9 @@ export class Condition {
     private model: ConditionModel
   ) {}
 
-  evaluate(): boolean {
+  evaluateCondition(): boolean {
+
+    //console.log("eval cond");
 
     if (this.model.booleanValue && this.model.booleanValue.comparison) {
       // comparaison booléenne
@@ -23,6 +25,15 @@ export class Condition {
     }
 
     return true;
+  }
+
+  evaluate(): boolean {
+    let val: boolean = this.evaluateCondition();
+    return this.model.negated ? !val : val;
+  }
+
+  negateIfNecessary(value: boolean): boolean {
+    return this.model.negated ? !value : value;
   }
 
   evaluateOperand(comparisonOperand: ComparisonOperandModel): string | number | boolean {
