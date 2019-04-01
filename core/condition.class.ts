@@ -8,7 +8,6 @@ export class Condition {
   ) {}
 
   evaluate(): boolean {
-    //console.log("Evaluation", this.model);
 
     if (this.model.booleanValue && this.model.booleanValue.comparison) {
       // comparaison booléenne
@@ -19,6 +18,8 @@ export class Condition {
       let operator: ComparisonOperator = comparison.operator;
 
       return this.compare(operandValue1, operandValue2, operator);
+    } else if (this.model.blockId) {
+      return GameContext.hasBlockBeenSeen(this.model.blockId);
     }
 
     return true;
@@ -55,7 +56,7 @@ export class Condition {
     if (model.conditionName) {
       let condition: Condition = GameContext.getCondition(model.conditionName);
       return condition ? condition.evaluate() : false;
-    } else if (model.booleanValue) {
+    } else {
       // création d'une condition temporaire
       let condition = new Condition(model);
       return condition.evaluate();

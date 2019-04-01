@@ -39,6 +39,10 @@ export class GameContext {
     }
   }
 
+  static hasBlockBeenSeen(blockId: string): boolean {
+    return true;
+  }
+
   static setVariable(variableName: string, value: any, forcedType: string = null) {
 
     if ((typeof value) === "string") {

@@ -138,7 +138,8 @@ export class GameSequence {
     lines.forEach(line => {
 
       let unit: TextUnit = {
-        styles: line.formats
+        styles: line.formats,
+        textType: line.type
       };
 
       switch(line.type) {
@@ -157,6 +158,11 @@ export class GameSequence {
 
         case BlockLineType.TAG:
           unit.tag = line.tag;
+          units.push(unit);
+          break;
+
+        case BlockLineType.PARAGRAPH_SEPARATOR:
+        case BlockLineType.LINE_BREAK:
           units.push(unit);
           break;
       }
@@ -181,6 +187,7 @@ export class GameSequence {
   }
 
   evaluateCondition(model: ConditionModel): boolean {
+    console.log(model)
     if (!model) {
       return true;
     } else {
