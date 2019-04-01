@@ -46,6 +46,16 @@ export class IncrementalDataSaver {
         
     }
 
+    hasBlockBeenSeen(blockId: string): boolean {
+        for (let step of this.currentStep.steps) {
+            if (step.blockId === blockId) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
     save() {
         this.saveToLocalStorage();
     }

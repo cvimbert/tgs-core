@@ -40,7 +40,7 @@ export class GameContext {
   }
 
   static hasBlockBeenSeen(blockId: string): boolean {
-    return true;
+    return this.dataSaver.hasBlockBeenSeen(blockId);
   }
 
   static setVariable(variableName: string, value: any, forcedType: string = null) {
