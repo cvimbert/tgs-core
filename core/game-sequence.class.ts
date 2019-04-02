@@ -7,6 +7,7 @@ import { TextUnit } from './data-interfaces/text-unit.interface';
 import { GameStep } from './saver/interfaces/game-step.interface';
 import { SequenceStep } from './saver/interfaces/sequence-step.interface';
 import { GameManager } from './game-manager.class';
+import { LinkDirectiveModel } from 'tgs-model/core/model/link-directive-model.class';
 
 export class GameSequence {
 
@@ -133,11 +134,38 @@ export class GameSequence {
 
     // traiter ici les directives ?
 
-    return this.applyLinkDirectives(links);
+    return this.resolveLinkDirectives(links);
   }
 
-  applyLinkDirectives(links: LinkModel[]): LinkModel[] {
-    return links;
+  // le système de directives doit pouvoir être extensible
+  // voir la logique de résolution, ainsi que l'ordre de résolution des directives
+
+  resolveLinkDirectives(links: LinkModel[]): LinkModel[] {
+    let linksArray: LinkModel[] = [];
+
+    links.forEach(link => {
+
+      //console.log(link.directives);
+
+      let resolved: boolean = true;
+
+      // première passe, pour les filtres
+      link.directives.forEach(directive => {
+        switch (directive.id) {
+          case "unique":
+            if (GameContext.hasBlockBeenSeen(link.localLinkRef)) {
+              resolved = false;
+            }
+            break;
+        }
+      });
+
+      if (resolved) {
+        linksArray.push(link);
+      }
+    });
+
+    return linksArray;
   }
 
   getTextUnits(lines: GameBlockLineModel[]): TextUnit[] {
@@ -207,9 +235,9 @@ export class GameSequence {
     let links: LinkModel[] = [];
 
     if (blockLinks) {
-      return blockLinks.filter(link => this.evaluateCondition(link.condition));
+      return this.resolveLinkDirectives(blockLinks.filter(link => this.evaluateCondition(link.condition)));
     }
 
-    return links;
+    return this.resolveLinkDirectives(links);
   }
 }
