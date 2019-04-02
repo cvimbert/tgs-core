@@ -129,7 +129,15 @@ export class GameSequence {
 
   getLinks(blockId: string): LinkModel[] {
     let block: GameBlockModel = this.structureData.blocks[blockId];
-    return this.getBlockLinks(block.links);
+    let links: LinkModel[] = this.getBlockLinks(block.links);
+
+    // traiter ici les directives ?
+
+    return this.applyLinkDirectives(links);
+  }
+
+  applyLinkDirectives(links: LinkModel[]): LinkModel[] {
+    return links;
   }
 
   getTextUnits(lines: GameBlockLineModel[]): TextUnit[] {
