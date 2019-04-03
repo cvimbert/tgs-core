@@ -7,7 +7,7 @@ export class Condition {
     private model: ConditionModel
   ) {}
 
-  evaluateCondition(): boolean {
+  private evaluateCondition(): boolean {
 
     //console.log("eval cond");
 

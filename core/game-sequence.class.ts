@@ -1,4 +1,4 @@
-import { MainStructure, GameBlockModel, GameBlockLineModel, BlockLineType, LinkModel, ConditionModel } from 'tgs-model'
+import { MainStructure, GameBlockModel, GameBlockLineModel, BlockLineType, LinkModel, ConditionModel, ComplexConditionModel } from 'tgs-model'
 import { SequenceStructure } from './data-interfaces/sequence-structure.interface';
 import { Condition } from './condition.class';
 import { GameContext } from './game-context.class';
@@ -8,6 +8,7 @@ import { GameStep } from './saver/interfaces/game-step.interface';
 import { SequenceStep } from './saver/interfaces/sequence-step.interface';
 import { GameManager } from './game-manager.class';
 import { LinkDirectiveModel } from 'tgs-model/core/model/link-directive-model.class';
+import { ComplexCondition } from './complex-condition.class';
 
 export class GameSequence {
 
@@ -63,8 +64,8 @@ export class GameSequence {
       // on teste les conditions de redirection une à une, en executant la premère valable
 
       for (let redirection of block.redirections) {
-        if (redirection.condition) {
-          let condition = new Condition(redirection.condition);
+        if (redirection.complexCondition) {
+          let condition = new ComplexCondition(redirection.complexCondition);
 
           if (condition.evaluate()) {
             this.loadBlock(redirection.localLinkRef);
@@ -185,7 +186,7 @@ export class GameSequence {
           break;
 
         case BlockLineType.COMPLEX:
-          if (this.evaluateCondition(line.condition)) {
+          if (this.evaluateCondition(line.complexCondition)) {
             unit.units = this.getTextUnits(line.lines);
             units.push(unit);
           }
@@ -222,12 +223,12 @@ export class GameSequence {
     return text;
   }
 
-  evaluateCondition(model: ConditionModel): boolean {
+  evaluateCondition(model: ComplexConditionModel): boolean {
     //console.log(model)
     if (!model) {
       return true;
     } else {
-      return Condition.evaluateInContext(model);
+      return ComplexCondition.evaluateModel(model);
     }
   }
 
@@ -235,7 +236,7 @@ export class GameSequence {
     let links: LinkModel[] = [];
 
     if (blockLinks) {
-      return this.resolveLinkDirectives(blockLinks.filter(link => this.evaluateCondition(link.condition)));
+      return this.resolveLinkDirectives(blockLinks.filter(link => this.evaluateCondition(link.complexCondition)));
     }
 
     return this.resolveLinkDirectives(links);
