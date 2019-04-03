@@ -53,7 +53,10 @@ export class GameManager {
 
   loadGameFromSave() {
     //console.log(GameContext.dataSaver.currentStep);
+
+    // l'extraction des variables ne doit pas être fait ici, mais à chaque step
     GameContext.extractVariables();
+    
     let sequenceId: string = GameContext.dataSaver.currentStep.sequenceId;
     this.loadFile(sequenceId).then(sequence => {
       sequence.initFromSave(GameContext.dataSaver.currentStep);
