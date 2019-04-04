@@ -119,7 +119,7 @@ export class IncrementalDataSaver {
 
     getVariable(variableName: string, sequenceIndex?: number, sequenceStepIndex?: number): any {
 
-        console.log("ici");
+        //console.log("ici");
 
         if (sequenceIndex === undefined) {
             sequenceIndex = this.steps.length - 1;

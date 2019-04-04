@@ -170,7 +170,7 @@ export class GameSequence {
   getTextUnits(lines: GameBlockLineModel[], sequenceIndex?: number): TextUnit[] {
     let units: TextUnit[] = [];
 
-    lines.forEach(line => {
+    lines.forEach((line: GameBlockLineModel, index: number) => {
 
       let unit: TextUnit = {
         styles: line.formats,
