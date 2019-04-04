@@ -4,7 +4,7 @@ import { Condition } from "./condition.class";
 export class ComplexCondition {
 
     private simpleCondition: Condition;
-    private operand1: ComplexCondition;
+    private operand1: Condition;
     private operand2: ComplexCondition;
 
     constructor(
@@ -13,7 +13,7 @@ export class ComplexCondition {
         if (model.simpleCondition) {
             this.simpleCondition = new Condition(model.simpleCondition);
         } else {
-            this.operand1 = new ComplexCondition(model.operand1);
+            this.operand1 = new Condition(model.operand1);
             this.operand2 = new ComplexCondition(model.operand2);
         }
     }
