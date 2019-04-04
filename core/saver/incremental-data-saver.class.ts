@@ -117,6 +117,39 @@ export class IncrementalDataSaver {
         return variables;
     }
 
+    getVariable(variableName: string, sequenceIndex?: number, sequenceStepIndex?: number): any {
+
+        console.log("ici");
+
+        if (sequenceIndex === undefined) {
+            sequenceIndex = this.steps.length - 1;
+        }
+
+        let startStep: number = sequenceStepIndex;
+
+        if (sequenceStepIndex === undefined) {
+            startStep = this.steps[sequenceIndex].steps.length - 1;
+        }
+
+        for (let i: number = sequenceIndex; i >= 0; i--) {
+
+            for (let j: number = startStep; j >= 0; j--) {
+
+                if (this.steps[i].steps[j].variables[variableName] !== undefined) {
+                    return this.steps[i].steps[j].variables[variableName];
+                }
+            }
+
+            if (this.steps[i].variables[variableName]) {
+                return this.steps[i].variables[variableName];
+            }
+
+            if (i > 0) {
+                startStep = this.steps[i - 1].steps.length;
+            }
+        }
+    }
+
     removeLast() {
         if (this.currentStep.steps.length > 1) {
             this.currentStep.steps.pop();

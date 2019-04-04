@@ -1,5 +1,4 @@
-import { MainStructure, GameBlockModel, GameBlockLineModel, BlockLineType, LinkModel, ConditionModel, ComplexConditionModel } from 'tgs-model'
-import { SequenceStructure } from './data-interfaces/sequence-structure.interface';
+import { MainStructure, GameBlockModel, GameBlockLineModel, BlockLineType, LinkModel, ComplexConditionModel } from 'tgs-model'
 import { Condition } from './condition.class';
 import { GameContext } from './game-context.class';
 import { Script } from './script.class';
@@ -7,7 +6,6 @@ import { TextUnit } from './data-interfaces/text-unit.interface';
 import { GameStep } from './saver/interfaces/game-step.interface';
 import { SequenceStep } from './saver/interfaces/sequence-step.interface';
 import { GameManager } from './game-manager.class';
-import { LinkDirectiveModel } from 'tgs-model/core/model/link-directive-model.class';
 import { ComplexCondition } from './complex-condition.class';
 
 export class GameSequence {
@@ -120,16 +118,16 @@ export class GameSequence {
         this.executeBlockScript(block, "head");
       }
 
-      this.units.push(this.getBlocks(sequenceStep.blockId));
+      this.units.push(this.getBlocks(sequenceStep.blockId, index));
     });
   }
 
-  getBlocks(blockId: string): TextUnit[] {
+  getBlocks(blockId: string, sequenceIndex?: number): TextUnit[] {
     let block: GameBlockModel = this.structureData.blocks[blockId];
-    return this.getTextUnits(block.lines);
+    return this.getTextUnits(block.lines, sequenceIndex);
   }
 
-  getLinks(blockId: string): LinkModel[] {
+  getLinks(blockId: string, sequenceIndex?: number): LinkModel[] {
     let block: GameBlockModel = this.structureData.blocks[blockId];
     let links: LinkModel[] = this.getBlockLinks(block.links);
 
@@ -169,7 +167,7 @@ export class GameSequence {
     return linksArray;
   }
 
-  getTextUnits(lines: GameBlockLineModel[]): TextUnit[] {
+  getTextUnits(lines: GameBlockLineModel[], sequenceIndex?: number): TextUnit[] {
     let units: TextUnit[] = [];
 
     lines.forEach(line => {
@@ -187,7 +185,7 @@ export class GameSequence {
 
         case BlockLineType.COMPLEX:
           if (this.evaluateCondition(line.complexCondition)) {
-            unit.units = this.getTextUnits(line.lines);
+            unit.units = this.getTextUnits(line.lines, sequenceIndex);
             units.push(unit);
           }
 

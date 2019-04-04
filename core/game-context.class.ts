@@ -29,9 +29,12 @@ export class GameContext {
     }
   }
 
-  static getVariable(variableName: string, dispatchError = true): any {
-    if (this.variablesStore[variableName] !== undefined) {
-      return this.variablesStore[variableName];
+  static getVariable(variableName: string, dispatchError = true, sequenceIndex?: number, sequenceStepIndex?: number): any {
+
+    let value: any = this.dataSaver.getVariable(variableName, sequenceIndex, sequenceStepIndex);
+
+    if (value !== undefined) {
+      return value;
     } else {
       if (dispatchError) {
         console.error(`No variable named '${ variableName }' in store.`);
@@ -57,7 +60,7 @@ export class GameContext {
       }
     }
 
-    this.variablesStore[variableName] = value;
+    //this.variablesStore[variableName] = value;
     this.dataSaver.setVariable(variableName, value);
 
     // temp
@@ -65,7 +68,7 @@ export class GameContext {
   }
 
   static deleteVariable(variableName: string) {
-    delete this.variablesStore[variableName];
+    //delete this.variablesStore[variableName];
   }
 
   static save() {
@@ -78,7 +81,7 @@ export class GameContext {
   }
 
   static extractVariables() {
-    this.variablesStore = this.dataSaver.getCurrentVariables();
+    //this.variablesStore = this.dataSaver.getCurrentVariables();
   }
 
   static onSequenceLoaded(sequenceId: string) {
