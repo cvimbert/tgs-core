@@ -234,7 +234,7 @@ export class GameSequence {
     let links: LinkModel[] = [];
 
     if (blockLinks) {
-      return this.resolveLinkDirectives(blockLinks.filter(link => this.evaluateCondition(link.complexCondition)));
+      }));
     }
 
     return this.resolveLinkDirectives(links);
