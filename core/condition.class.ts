@@ -32,10 +32,6 @@ export class Condition {
     return this.model.negated ? !val : val;
   }
 
-  negateIfNecessary(value: boolean): boolean {
-    return this.model.negated ? !value : value;
-  }
-
   evaluateOperand(comparisonOperand: ComparisonOperandModel): string | number | boolean {
     //console.log("operand", comparisonOperand);
 

@@ -3,6 +3,7 @@ import { Condition } from "./condition.class";
 import { Argument } from "./argument.class";
 import { GameContext } from "./game-context.class";
 import { Assignation } from "./assignation.class";
+import { ComplexCondition } from "./complex-condition.class";
 
 export class Instruction {
 
@@ -33,7 +34,7 @@ export class Instruction {
         break;
 
       case ScriptInstructionType.IF:
-        if (Condition.evaluateInContext(this.model.condition)) {
+        if (ComplexCondition.evaluateModel(this.model.condition)) {
           this.executeInstructions();
         }
         break;

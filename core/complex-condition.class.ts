@@ -35,7 +35,8 @@ export class ComplexCondition {
     }
 
     evaluate(): boolean {
-        return this.evaluateCondition();
+        let val: boolean = this.evaluateCondition();
+        return this.model.negated ? !val : val;
     }
 
     static evaluateModel(model: ComplexConditionModel): boolean {
