@@ -105,12 +105,15 @@ export class GameSequence {
     }
   }
 
-  initFromSave(step: GameStep) {
+  initFromSave(step: GameStep, sequenceIndex: number) {
     //console.log("step to reconstitute", step);
+    GameContext.currentSequenceIndex = sequenceIndex;
 
-    step.steps.forEach((sequenceStep: SequenceStep, index: number) => {
+    step.steps.forEach((sequenceStep: SequenceStep, sequenceStepIndex: number) => {
 
-      if (index === step.steps.length - 1) {
+      GameContext.currentSequenceStepIndex = sequenceStepIndex;
+
+      if (sequenceStepIndex === step.steps.length - 1) {
         this.links = this.getLinks(sequenceStep.blockId) || [];
 
         let block: GameBlockModel = this.structureData.blocks[sequenceStep.blockId];
@@ -118,13 +121,16 @@ export class GameSequence {
         this.executeBlockScript(block, "head");
       }
 
-      this.units.push(this.getBlocks(sequenceStep.blockId, index));
+      this.units.push(this.getBlocks(sequenceStep.blockId));
     });
+
+    delete GameContext.currentSequenceIndex;
+    delete GameContext.currentSequenceStepIndex;
   }
 
-  getBlocks(blockId: string, sequenceIndex?: number): TextUnit[] {
+  getBlocks(blockId: string): TextUnit[] {
     let block: GameBlockModel = this.structureData.blocks[blockId];
-    return this.getTextUnits(block.lines, sequenceIndex);
+    return this.getTextUnits(block.lines);
   }
 
   getLinks(blockId: string, sequenceIndex?: number): LinkModel[] {
@@ -167,10 +173,10 @@ export class GameSequence {
     return linksArray;
   }
 
-  getTextUnits(lines: GameBlockLineModel[], sequenceIndex?: number): TextUnit[] {
+  getTextUnits(lines: GameBlockLineModel[]): TextUnit[] {
     let units: TextUnit[] = [];
 
-    lines.forEach((line: GameBlockLineModel, index: number) => {
+    lines.forEach((line: GameBlockLineModel) => {
 
       let unit: TextUnit = {
         styles: line.formats,
@@ -185,7 +191,7 @@ export class GameSequence {
 
         case BlockLineType.COMPLEX:
           if (this.evaluateCondition(line.complexCondition)) {
-            unit.units = this.getTextUnits(line.lines, sequenceIndex);
+            unit.units = this.getTextUnits(line.lines);
             units.push(unit);
           }
 
@@ -234,7 +240,7 @@ export class GameSequence {
     let links: LinkModel[] = [];
 
     if (blockLinks) {
-      }));
+      return this.resolveLinkDirectives(blockLinks.filter(link => this.evaluateCondition(link.complexCondition)));
     }
 
     return this.resolveLinkDirectives(links);

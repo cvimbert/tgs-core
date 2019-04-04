@@ -12,6 +12,9 @@ export class GameContext {
 
   static dataSaver: IncrementalDataSaver;
 
+  static currentSequenceIndex: number;
+  static currentSequenceStepIndex: number;
+
   static init(): boolean {
     if (!this.initialized) {
       this.dataSaver = new IncrementalDataSaver();
@@ -29,9 +32,9 @@ export class GameContext {
     }
   }
 
-  static getVariable(variableName: string, dispatchError = true, sequenceIndex?: number, sequenceStepIndex?: number): any {
+  static getVariable(variableName: string, dispatchError = true): any {
 
-    let value: any = this.dataSaver.getVariable(variableName, sequenceIndex, sequenceStepIndex);
+    let value: any = this.dataSaver.getVariable(variableName, this.currentSequenceIndex, this.currentSequenceStepIndex);
 
     if (value !== undefined) {
       return value;

@@ -3,7 +3,7 @@ import { SequenceStep } from "./interfaces/sequence-step.interface";
 
 export class IncrementalDataSaver {
 
-    private steps: GameStep[] = [];
+    steps: GameStep[] = [];
     currentStep: GameStep;
 
     constructor() {

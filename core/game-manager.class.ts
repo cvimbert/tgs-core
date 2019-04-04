@@ -59,7 +59,7 @@ export class GameManager {
     
     let sequenceId: string = GameContext.dataSaver.currentStep.sequenceId;
     this.loadFile(sequenceId).then(sequence => {
-      sequence.initFromSave(GameContext.dataSaver.currentStep);
+      sequence.initFromSave(GameContext.dataSaver.currentStep, GameContext.dataSaver.steps.length - 1);
       this.currentSequence = this.sequence;
     });
   }
