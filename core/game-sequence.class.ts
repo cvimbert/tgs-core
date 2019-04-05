@@ -16,6 +16,8 @@ export class GameSequence {
   units: TextUnit[][] = [];
   links: LinkModel[];
 
+  initialized = false;
+
   constructor(
     public structureData: MainStructure,
     private manager: GameManager
@@ -42,6 +44,9 @@ export class GameSequence {
   }
 
   loadBlock(blockId: string) {
+
+    this.initialized = true;
+    //console.log("ici");
     
     GameContext.onBlockLoaded(blockId);
 
