@@ -81,7 +81,7 @@ export class GameManager {
   }
 
   getVariables(): {[key: string]: any} {
-    return GameContext.variablesStore;
+    return GameContext.getCurrentVariables();
   }
 
   setVariable(name: string, value: any, forcedType: string = null) {

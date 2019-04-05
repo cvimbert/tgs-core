@@ -87,6 +87,10 @@ export class GameContext {
     //this.variablesStore = this.dataSaver.getCurrentVariables();
   }
 
+  static getCurrentVariables(): {[key: string]: any} {
+    return this.dataSaver.getCurrentVariables();
+  }
+
   static onSequenceLoaded(sequenceId: string) {
     this.dataSaver.addStep(sequenceId);
   }
