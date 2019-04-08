@@ -54,6 +54,7 @@ export class Instruction {
     switch (model.commandName) {
       case "log":
         console.log("gamelog:", ...this.arguments.map(argument => argument.value));
+        GameContext.log(this.arguments.map(argument => argument.value));
         break;
 
       case "setvar":

@@ -1,5 +1,6 @@
 import { Condition } from "./condition.class";
 import { IncrementalDataSaver } from "./saver/incremental-data-saver.class";
+import { LogItem } from './data-interfaces/log-item.interface';
 
 export class GameContext {
 
@@ -14,6 +15,8 @@ export class GameContext {
 
   static currentSequenceIndex: number;
   static currentSequenceStepIndex: number;
+
+  static currentLogs: LogItem[] = [];
 
   static init(): boolean {
     if (!this.initialized) {
@@ -97,6 +100,15 @@ export class GameContext {
 
   static onBlockLoaded(blockId: string) {
     this.dataSaver.addSequenceStep(blockId);
+  }
+
+  static log(logs: string[]) {
+    this.currentLogs.push(...logs.map(log => {
+      return {
+        date: Date.now(),
+        text: log
+      }
+    }));
   }
 
 }

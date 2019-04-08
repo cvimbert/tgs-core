@@ -3,6 +3,7 @@ import { GameSequence } from "./game-sequence.class";
 import { TGSParser, ParsingResult } from "tgs-parser";
 import { MainStructure } from "tgs-model";
 import { GameContext } from "./game-context.class";
+import { LogItem } from './data-interfaces/log-item.interface';
 
 export class GameManager {
 
@@ -35,6 +36,14 @@ export class GameManager {
       console.log("Pas de données");
       this.newGame();
     }
+  }
+
+  get logs(): LogItem[] {
+    return GameContext.currentLogs;
+  }
+
+  deleteLog(logIndex: number) {
+    GameContext.currentLogs.splice(logIndex, 1);
   }
 
   newGame() {
