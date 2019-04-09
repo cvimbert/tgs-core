@@ -63,8 +63,12 @@ export class GameSequence {
     
     GameContext.save();
 
+    console.log(block);
+
     if (block.redirections) {
       // on teste les conditions de redirection une à une, en executant la premère valable
+
+      //console.log(block.redirections);
 
       for (let redirection of block.redirections) {
         if (redirection.complexCondition) {
