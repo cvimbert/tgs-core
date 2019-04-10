@@ -66,10 +66,7 @@ export class IncrementalDataSaver {
 
     addStep(sequenceId: string) {
 
-        // peut-être pas très futé (cas où on reprend d'une sauvegarde existante) - Pour débug
-        // sécurité pour ne pas créer un nouveau step
-
-        if (!this.currentStep || this.currentStep.sequenceId !== sequenceId) {
+        if (!this.currentStep) {
             this.currentStep = {
                 sequenceId: sequenceId,
                 steps: [],
@@ -81,20 +78,25 @@ export class IncrementalDataSaver {
     }
 
     addSequenceStep(blockId: string) {
-        let lastSequenceStep: SequenceStep = this.lastSequenceStep;
+        //console.log("add sequence step", blockId, this.lastSequenceStep);
 
-        if (!lastSequenceStep || lastSequenceStep.blockId !== blockId) {
-            this.currentStep.steps.push({
-                blockId: blockId,
-                variables: {}
-            });
-        }
+        // ????
+        //let lastSequenceStep = this.lastSequenceStep;
+
+        /*if (!lastSequenceStep) {
+            
+        }*/
+
+        this.currentStep.steps.push({
+            blockId: blockId,
+            variables: {}
+        });
 
         //console.log("variables", this.getCurrentVariables());
     }
 
     setVariable(name: string, value: any) {
-        let lastSequenceStep: SequenceStep = this.lastSequenceStep;
+        let lastSequenceStep = this.lastSequenceStep;
 
         if (lastSequenceStep) {
             lastSequenceStep.variables[name] = value;

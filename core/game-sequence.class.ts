@@ -47,6 +47,8 @@ export class GameSequence {
 
     this.initialized = true;
     //console.log("ici");
+
+    console.log("load block", blockId);
     
     GameContext.onBlockLoaded(blockId);
 
@@ -63,7 +65,7 @@ export class GameSequence {
     
     GameContext.save();
 
-    console.log(block);
+    //console.log(block);
 
     if (block.redirections) {
       // on teste les conditions de redirection une à une, en executant la premère valable
