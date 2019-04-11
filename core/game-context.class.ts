@@ -16,7 +16,7 @@ export class GameContext {
   static currentSequenceIndex: number;
   static currentSequenceStepIndex: number;
 
-  static currentLogs: LogItem[] = [];
+  //static currentLogs: LogItem[] = [];
 
   static init(): boolean {
     if (!this.initialized) {
@@ -25,6 +25,10 @@ export class GameContext {
     }
 
     return this.dataSaver.init();
+  }
+
+  static get currentLogs(): LogItem[] {
+    return this.dataSaver.logs;
   }
 
   static getCondition(conditionName: string): Condition {
@@ -103,7 +107,7 @@ export class GameContext {
   }
 
   static log(logs: string[]) {
-    this.currentLogs.push(...logs.map(log => {
+    this.dataSaver.logs.push(...logs.map(log => {
       return {
         date: Date.now(),
         text: log

@@ -47,8 +47,6 @@ export class GameSequence {
 
     this.initialized = true;
     //console.log("ici");
-
-    console.log("load block", blockId);
     
     GameContext.onBlockLoaded(blockId);
 

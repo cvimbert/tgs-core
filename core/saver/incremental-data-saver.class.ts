@@ -1,10 +1,12 @@
 import { GameStep } from "./interfaces/game-step.interface";
 import { SequenceStep } from "./interfaces/sequence-step.interface";
+import { LogItem } from "core/data-interfaces/log-item.interface";
 
 export class IncrementalDataSaver {
 
     steps: GameStep[] = [];
     currentStep: GameStep;
+    logs: LogItem[];
 
     constructor() {
         
@@ -23,16 +25,15 @@ export class IncrementalDataSaver {
 
     private saveToLocalStorage() {
         localStorage.setItem("steps", JSON.stringify(this.steps));
+        localStorage.setItem("logs", JSON.stringify(this.logs));
     }
 
     private loadFromLocalStorage() {
         let storageText: string = localStorage.getItem("steps");
+        let logsText: string = localStorage.getItem("logs");
 
-        if (storageText && storageText !== "") {
-            this.steps = JSON.parse(storageText);
-        } else {
-            this.steps = [];
-        }
+        this.steps = (storageText && storageText !== "") ? JSON.parse(storageText) : [];
+        this.logs = (logsText && logsText !== "") ? JSON.parse(logsText) : [];
     }
 
     private get lastSequenceStep(): SequenceStep {
@@ -169,6 +170,7 @@ export class IncrementalDataSaver {
     clear() {
         localStorage.setItem("steps", "");
         this.steps = [];
+        this.logs = [];
         this.currentStep = null;
         this.save();
     }

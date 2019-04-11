@@ -44,6 +44,12 @@ export class GameManager {
 
   deleteLog(logIndex: number) {
     GameContext.currentLogs.splice(logIndex, 1);
+    GameContext.save();
+  }
+
+  clearLogs() {
+    GameContext.currentLogs.length = 0;
+    GameContext.save();
   }
 
   newGame() {
