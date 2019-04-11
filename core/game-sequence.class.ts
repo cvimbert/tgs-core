@@ -39,6 +39,7 @@ export class GameSequence {
     if (this.scripts["init"]) {
       this.scripts["init"].execute();
     }
+    
 
     this.loadBlock(blockId || this.structureData.entryBlockId);
   }

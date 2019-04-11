@@ -79,14 +79,6 @@ export class IncrementalDataSaver {
     }
 
     addSequenceStep(blockId: string) {
-        //console.log("add sequence step", blockId, this.lastSequenceStep);
-
-        // ????
-        //let lastSequenceStep = this.lastSequenceStep;
-
-        /*if (!lastSequenceStep) {
-            
-        }*/
 
         this.currentStep.steps.push({
             blockId: blockId,
@@ -97,6 +89,7 @@ export class IncrementalDataSaver {
     }
 
     setVariable(name: string, value: any) {
+
         let lastSequenceStep = this.lastSequenceStep;
 
         if (lastSequenceStep) {
@@ -122,8 +115,6 @@ export class IncrementalDataSaver {
 
     getVariable(variableName: string, sequenceIndex?: number, sequenceStepIndex?: number): any {
 
-        //console.log("ici");
-
         if (sequenceIndex === undefined) {
             sequenceIndex = this.steps.length - 1;
         }
@@ -137,13 +128,12 @@ export class IncrementalDataSaver {
         for (let i: number = sequenceIndex; i >= 0; i--) {
 
             for (let j: number = startStep; j >= 0; j--) {
-
                 if (this.steps[i].steps[j].variables[variableName] !== undefined) {
                     return this.steps[i].steps[j].variables[variableName];
                 }
             }
 
-            if (this.steps[i].variables[variableName]) {
+            if (this.steps[i].variables[variableName] !== undefined) {
                 return this.steps[i].variables[variableName];
             }
 
