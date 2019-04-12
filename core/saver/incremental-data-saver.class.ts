@@ -1,6 +1,6 @@
 import { GameStep } from "./interfaces/game-step.interface";
 import { SequenceStep } from "./interfaces/sequence-step.interface";
-import { LogItem } from "core/data-interfaces/log-item.interface";
+import { LogItem } from "../data-interfaces/log-item.interface";
 
 export class IncrementalDataSaver {
 
