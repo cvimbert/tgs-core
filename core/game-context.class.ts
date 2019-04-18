@@ -16,6 +16,8 @@ export class GameContext {
   static currentSequenceIndex: number;
   static currentSequenceStepIndex: number;
 
+  static displayMode: string;
+
   //static currentLogs: LogItem[] = [];
 
   static init(): boolean {

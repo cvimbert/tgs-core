@@ -4,6 +4,7 @@ import { TGSParser, ParsingResult } from "tgs-parser";
 import { MainStructure } from "tgs-model";
 import { GameContext } from "./game-context.class";
 import { LogItem } from './data-interfaces/log-item.interface';
+import { GameMode } from './game-mode.enum';
 
 export class GameManager {
 
@@ -29,7 +30,7 @@ export class GameManager {
     // 2- Une partie est déjà lancée
     // dans ce cas, on chargé les données de la séquence en cours, pour initialisation dans ce contexte
 
-    if (alreadyLaunched) {
+    if (alreadyLaunched && this.mode === GameMode.NORMAL) {
       console.log("On a des données");
       this.loadGameFromSave();
     } else {
@@ -40,6 +41,14 @@ export class GameManager {
 
   get logs(): LogItem[] {
     return GameContext.currentLogs;
+  }
+
+  set mode(value: string) {
+    GameContext.displayMode = value;
+  }
+
+  get mode(): string {
+    return GameContext.displayMode;
   }
 
   deleteLog(logIndex: number) {

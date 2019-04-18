@@ -1,6 +1,8 @@
 import { GameStep } from "./interfaces/game-step.interface";
 import { SequenceStep } from "./interfaces/sequence-step.interface";
 import { LogItem } from "../data-interfaces/log-item.interface";
+import { GameContext } from '../game-context.class';
+import { GameMode } from '../game-mode.enum';
 
 export class IncrementalDataSaver {
 
@@ -24,8 +26,12 @@ export class IncrementalDataSaver {
     }
 
     private saveToLocalStorage() {
-        localStorage.setItem("steps", JSON.stringify(this.steps));
-        localStorage.setItem("logs", JSON.stringify(this.logs));
+
+        // à voir si il y a une manière plus judicieuse de faire
+        if (GameContext.displayMode === GameMode.NORMAL) {
+            localStorage.setItem("steps", JSON.stringify(this.steps));
+            localStorage.setItem("logs", JSON.stringify(this.logs));
+        }
     }
 
     private loadFromLocalStorage() {
