@@ -28,10 +28,10 @@ export class IncrementalDataSaver {
     private saveToLocalStorage() {
 
         // à voir si il y a une manière plus judicieuse de faire
-        if (GameContext.displayMode === GameMode.NORMAL) {
+        //if (GameContext.displayMode === GameMode.NORMAL) {
             localStorage.setItem("steps", JSON.stringify(this.steps));
             localStorage.setItem("logs", JSON.stringify(this.logs));
-        }
+        //}
     }
 
     private loadFromLocalStorage() {
