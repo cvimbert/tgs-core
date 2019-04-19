@@ -1,10 +1,12 @@
 import { GameConfiguration } from "./data-interfaces/game-configuration.interface";
+import { SequenceItem } from "./data-interfaces/sequence-item.interface";
 import { GameSequence } from "./game-sequence.class";
 import { TGSParser, ParsingResult } from "tgs-parser";
 import { MainStructure } from "tgs-model";
 import { GameContext } from "./game-context.class";
 import { LogItem } from './data-interfaces/log-item.interface';
 import { GameMode } from './game-mode.enum';
+import { SequenceItemType } from './data-interfaces/sequence-item-type.enum';
 
 export class GameManager {
 
@@ -37,6 +39,75 @@ export class GameManager {
       console.log("Pas de données");
       this.newGame();
     }
+  }
+
+  registerSequence(path: string) {
+
+    this.getFolderContent("path");
+
+    var sequences = this.getRegisteredSequencesList();
+
+    if (sequences.indexOf(path) === -1) {
+      // le path n'a jamais été visité
+
+      sequences.push(path);
+      localStorage.setItem("sequences", JSON.stringify(sequences));
+    }
+  }
+
+  getRegisteredSequencesList(): string[] {
+    let sequencesStr: string = localStorage.getItem("sequences");
+    
+    if (!sequencesStr || sequencesStr === "") {
+      return [];
+    } else {
+      return JSON.parse(sequencesStr);
+    }
+  }
+
+  getFolderContent(path: string): SequenceItem[] {
+
+    console.log("get folder content");
+
+    let items: SequenceItem[] = [];
+
+    this.getRegisteredSequencesList().forEach(sequencePath => {
+
+      console.log("path", sequencePath);
+
+      let index = sequencePath.lastIndexOf("/");
+      let baseName = sequencePath.substr(index + 1);
+      let folder = sequencePath.substring(0, index);
+
+      console.log ("basename", baseName, "fold", folder);
+
+      if (folder.indexOf(path) === 0) {
+        // c'est un élément dans le dossier requis
+        let after = folder.substr(path.length + 1);
+
+        if (after === "") {
+          // fichier
+          items.push({
+            name: baseName,
+            type: SequenceItemType.FILE
+          });
+        } else {
+          // dossier
+          let sindex = after.indexOf("/");
+          let sfolder = sindex !== -1 ? after.substring(0, sindex) : after;
+
+          items.push({
+            name: sfolder,
+            type: SequenceItemType.FOLDER
+          });
+        }
+
+        console.log("ici", after);
+      }
+    });
+
+    console.log("items", items);
+    return items;
   }
 
   get logs(): LogItem[] {
