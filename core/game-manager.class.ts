@@ -94,7 +94,15 @@ export class GameManager {
         } else {
           // dossier
           let sindex = after.indexOf("/");
-          let sfolder = sindex !== -1 ? after.substring(0, sindex) : after;
+          let sfolder: string;
+
+          if (sindex === -1) {
+            sfolder = after;
+          } else if (sindex === 0) {
+            sfolder = after.substring(1);
+          } else {
+            sfolder = after.substring(0, sindex);
+          }
 
           let unique = true;
 
@@ -103,6 +111,10 @@ export class GameManager {
               unique = false;
               break;
             }
+          }
+
+          if (sfolder === "") {
+            console.log("là");
           }
 
           if (unique) {
