@@ -1,3 +1,4 @@
+export { SequenceItemType } from './core/data-interfaces/sequence-item-type.enum';
 export { GameManager } from "./core/game-manager.class";
 export { GameContext } from "./core/game-context.class";
 export { GameSequence } from "./core/game-sequence.class";
@@ -6,3 +7,4 @@ export { TextUnit } from "./core/data-interfaces/text-unit.interface";
 export { GameConfiguration } from "./core/data-interfaces/game-configuration.interface";
 export { LogItem } from "./core/data-interfaces/log-item.interface";
 export { GameMode } from "./core/game-mode.enum";
+export { SequenceItem } from "./core/data-interfaces/sequence-item.interface";

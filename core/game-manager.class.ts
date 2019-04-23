@@ -43,7 +43,7 @@ export class GameManager {
 
   registerSequence(path: string) {
 
-    this.getFolderContent("path");
+    // this.getFolderContent("path");
 
     var sequences = this.getRegisteredSequencesList();
 
@@ -67,23 +67,23 @@ export class GameManager {
 
   getFolderContent(path: string): SequenceItem[] {
 
-    console.log("get folder content");
+    //console.log("get folder content");
 
     let items: SequenceItem[] = [];
 
     this.getRegisteredSequencesList().forEach(sequencePath => {
 
-      console.log("path", sequencePath);
+      //console.log("path", sequencePath);
 
       let index = sequencePath.lastIndexOf("/");
       let baseName = sequencePath.substr(index + 1);
       let folder = sequencePath.substring(0, index);
 
-      console.log ("basename", baseName, "fold", folder);
+      //console.log ("basename", baseName, "fold", folder);
 
       if (folder.indexOf(path) === 0) {
         // c'est un élément dans le dossier requis
-        let after = folder.substr(path.length + 1);
+        let after = folder.substr(path.length);
 
         if (after === "") {
           // fichier
@@ -96,17 +96,28 @@ export class GameManager {
           let sindex = after.indexOf("/");
           let sfolder = sindex !== -1 ? after.substring(0, sindex) : after;
 
-          items.push({
-            name: sfolder,
-            type: SequenceItemType.FOLDER
-          });
+          let unique = true;
+
+          for (let item of items) {
+            if (item.type === SequenceItemType.FOLDER && item.name === sfolder) {
+              unique = false;
+              break;
+            }
+          }
+
+          if (unique) {
+            items.push({
+              name: sfolder,
+              type: SequenceItemType.FOLDER
+            });
+          }
         }
 
-        console.log("ici", after);
+        //console.log("ici", after);
       }
     });
 
-    console.log("items", items);
+    // console.log("items", items);
     return items;
   }
 
