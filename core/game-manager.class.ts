@@ -41,6 +41,8 @@ export class GameManager {
     }
   }
 
+  
+
   registerSequence(path: string) {
 
     // this.getFolderContent("path");
