@@ -38,7 +38,12 @@ export class IncrementalDataSaver {
         let storageText: string = localStorage.getItem("steps");
         let logsText: string = localStorage.getItem("logs");
 
-        this.steps = (storageText && storageText !== "") ? JSON.parse(storageText) : [];
+        if (GameContext.displayMode === GameMode.NORMAL) {
+            this.steps = (storageText && storageText !== "") ? JSON.parse(storageText) : [];
+        } else {
+            this.steps = [];
+        }
+        
         this.logs = (logsText && logsText !== "") ? JSON.parse(logsText) : [];
     }
 
