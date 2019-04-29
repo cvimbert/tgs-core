@@ -41,8 +41,6 @@ export class GameManager {
     }
   }
 
-  
-
   registerSequence(path: string) {
 
     // this.getFolderContent("path");
@@ -67,72 +65,74 @@ export class GameManager {
     }
   }
 
-  getFolderContent(path: string): SequenceItem[] {
+  getFolderContent(path: string): Promise<SequenceItem[]> {
 
-    //console.log("get folder content");
+    return new Promise<SequenceItem[]>((resolve: Function, reject: Function) => {
+      //console.log("get folder content");
 
-    let items: SequenceItem[] = [];
+      let items: SequenceItem[] = [];
 
-    this.getRegisteredSequencesList().forEach(sequencePath => {
+      this.getRegisteredSequencesList().forEach(sequencePath => {
 
-      //console.log("path", sequencePath);
+        //console.log("path", sequencePath);
 
-      let index = sequencePath.lastIndexOf("/");
-      let baseName = sequencePath.substr(index + 1);
-      let folder = sequencePath.substring(0, index);
+        let index = sequencePath.lastIndexOf("/");
+        let baseName = sequencePath.substr(index + 1);
+        let folder = sequencePath.substring(0, index);
 
-      //console.log ("basename", baseName, "fold", folder);
+        //console.log ("basename", baseName, "fold", folder);
 
-      if (folder.indexOf(path) === 0) {
-        // c'est un élément dans le dossier requis
-        let after = folder.substr(path.length);
+        if (folder.indexOf(path) === 0) {
+          // c'est un élément dans le dossier requis
+          let after = folder.substr(path.length);
 
-        if (after === "") {
-          // fichier
-          items.push({
-            name: baseName,
-            type: SequenceItemType.FILE
-          });
-        } else {
-          // dossier
-          let sindex = after.indexOf("/");
-          let sfolder: string;
-
-          if (sindex === -1) {
-            sfolder = after;
-          } else if (sindex === 0) {
-            sfolder = after.substring(1);
+          if (after === "") {
+            // fichier
+            items.push({
+              name: baseName,
+              type: SequenceItemType.FILE
+            });
           } else {
-            sfolder = after.substring(0, sindex);
-          }
+            // dossier
+            let sindex = after.indexOf("/");
+            let sfolder: string;
 
-          let unique = true;
+            if (sindex === -1) {
+              sfolder = after;
+            } else if (sindex === 0) {
+              sfolder = after.substring(1);
+            } else {
+              sfolder = after.substring(0, sindex);
+            }
 
-          for (let item of items) {
-            if (item.type === SequenceItemType.FOLDER && item.name === sfolder) {
-              unique = false;
-              break;
+            let unique = true;
+
+            for (let item of items) {
+              if (item.type === SequenceItemType.FOLDER && item.name === sfolder) {
+                unique = false;
+                break;
+              }
+            }
+
+            if (sfolder === "") {
+              console.log("là");
+            }
+
+            if (unique) {
+              items.push({
+                name: sfolder,
+                type: SequenceItemType.FOLDER
+              });
             }
           }
 
-          if (sfolder === "") {
-            console.log("là");
-          }
-
-          if (unique) {
-            items.push({
-              name: sfolder,
-              type: SequenceItemType.FOLDER
-            });
-          }
+          //console.log("ici", after);
         }
+      });
 
-        //console.log("ici", after);
-      }
+      // console.log("items", items);
+      resolve(items);
     });
-
-    // console.log("items", items);
-    return items;
   }
 
   get logs(): LogItem[] {
