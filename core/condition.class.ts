@@ -9,7 +9,7 @@ export class Condition {
 
   private evaluateCondition(): boolean {
 
-    console.log("eval cond");
+    //console.log("eval cond");
 
     if (this.model.booleanValue && this.model.booleanValue.comparison) {
       // comparaison booléenne
