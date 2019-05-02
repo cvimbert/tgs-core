@@ -93,7 +93,7 @@ export class GameSequence {
   }
 
   executeBlockScript(block: GameBlockModel, scriptId: string) {
-    if (block.scripts && block.scripts[scriptId]) {
+    if (block && block.scripts && block.scripts[scriptId]) {
       let script: Script = new Script(block.scripts[scriptId]);
       script.execute();
     }
@@ -140,12 +140,12 @@ export class GameSequence {
 
   getBlocks(blockId: string): TextUnit[] {
     let block: GameBlockModel = this.structureData.blocks[blockId];
-    return this.getTextUnits(block.lines);
+    return block ? this.getTextUnits(block.lines) : [];
   }
 
   getLinks(blockId: string, sequenceIndex?: number): LinkModel[] {
     let block: GameBlockModel = this.structureData.blocks[blockId];
-    let links: LinkModel[] = this.getBlockLinks(block.links);
+    let links: LinkModel[] = block ? this.getBlockLinks(block.links) : [];
 
     // traiter ici les directives ?
 
