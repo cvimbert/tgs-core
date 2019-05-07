@@ -1,3 +1,4 @@
+export { FunctionObject } from './core/function-object.class';
 export { SequenceItemType } from './core/data-interfaces/sequence-item-type.enum';
 export { GameManager } from "./core/game-manager.class";
 export { GameContext } from "./core/game-context.class";
