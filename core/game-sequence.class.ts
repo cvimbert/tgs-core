@@ -1,4 +1,4 @@
-import { MainStructure, GameBlockModel, GameBlockLineModel, BlockLineType, LinkModel, ComplexConditionModel } from 'tgs-model'
+import { MainStructure, GameBlockModel, GameBlockLineModel, BlockLineType, LinkModel, ComplexConditionModel, ScriptModel } from 'tgs-model'
 import { Condition } from './condition.class';
 import { GameContext } from './game-context.class';
 import { Script } from './script.class';
@@ -35,12 +35,10 @@ export class GameSequence {
     // on devra peut-être attendre que le contexte soit correctement initialisé
     GameContext.onSequenceLoaded(sequenceId);
 
-    // différencier init et firstUse ??
     if (this.scripts["init"]) {
       this.scripts["init"].execute();
     }
     
-
     this.loadBlock(blockId || this.structureData.entryBlockId);
   }
 
@@ -58,7 +56,11 @@ export class GameSequence {
     this.executeBlockScript(block, "head");
     
     let links: LinkModel[] = this.getBlockLinks(block.links);
-    this.units.push(this.getTextUnits(block.lines));
+
+    // ici
+    this.units.push(this.getTextUnits(block.lines, ["init", "head"]));
+
+    // this.executeScriptByModel()
      
     this.links = links || [];
     
@@ -107,6 +109,13 @@ export class GameSequence {
     }
   }
 
+  executeScriptByModel(model: ScriptModel) {
+    if (model) {
+      let script = new Script(model);
+      script.execute();
+    }
+  }
+
   evaluateConditionById(conditionId: string): boolean {
     if (this.conditions[conditionId]) {
       return this.conditions[conditionId].evaluate();
@@ -138,10 +147,13 @@ export class GameSequence {
     delete GameContext.currentSequenceStepIndex;
   }
 
+  // ici
   getBlocks(blockId: string): TextUnit[] {
     let block: GameBlockModel = this.structureData.blocks[blockId];
-    return block ? this.getTextUnits(block.lines) : [];
+    return block ? this.getTextUnits(block.lines, ["head"]) : [];
   }
+
+  
 
   getLinks(blockId: string, sequenceIndex?: number): LinkModel[] {
     let block: GameBlockModel = this.structureData.blocks[blockId];
@@ -183,7 +195,7 @@ export class GameSequence {
     return linksArray;
   }
 
-  getTextUnits(lines: GameBlockLineModel[]): TextUnit[] {
+  getTextUnits(lines: GameBlockLineModel[], scriptsToExecute: string[] = []): TextUnit[] {
     let units: TextUnit[] = [];
 
     lines.forEach((line: GameBlockLineModel) => {
@@ -201,7 +213,10 @@ export class GameSequence {
 
         case BlockLineType.COMPLEX:
           if (this.evaluateCondition(line.complexCondition)) {
-            unit.units = this.getTextUnits(line.lines);
+
+            scriptsToExecute.forEach(scriptId => this.executeScriptByModel(line.scripts[scriptId]));
+
+            unit.units = this.getTextUnits(line.lines, scriptsToExecute);
             units.push(unit);
           }
 
