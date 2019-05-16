@@ -58,7 +58,7 @@ export class GameSequence {
     let links: LinkModel[] = this.getBlockLinks(block.links);
 
     // ici
-    this.units.push(this.getTextUnits(block.lines, ["init", "head"]));
+    this.units.push(this.getTextUnits(block.lines, ["init", "head"], blockId));
 
     // this.executeScriptByModel()
      
@@ -150,7 +150,7 @@ export class GameSequence {
   // ici
   getBlocks(blockId: string): TextUnit[] {
     let block: GameBlockModel = this.structureData.blocks[blockId];
-    return block ? this.getTextUnits(block.lines, ["head"]) : [];
+    return block ? this.getTextUnits(block.lines, ["head"], blockId) : [];
   }
 
   
@@ -195,14 +195,15 @@ export class GameSequence {
     return linksArray;
   }
 
-  getTextUnits(lines: GameBlockLineModel[], scriptsToExecute: string[] = []): TextUnit[] {
+  getTextUnits(lines: GameBlockLineModel[], scriptsToExecute: string[] = [], blockId?: string): TextUnit[] {
     let units: TextUnit[] = [];
 
     lines.forEach((line: GameBlockLineModel) => {
 
       let unit: TextUnit = {
         styles: line.formats,
-        textType: line.type
+        textType: line.type,
+        blockId: blockId
       };
 
       switch(line.type) {
@@ -216,7 +217,7 @@ export class GameSequence {
 
             scriptsToExecute.forEach(scriptId => this.executeScriptByModel(line.scripts[scriptId]));
 
-            unit.units = this.getTextUnits(line.lines, scriptsToExecute);
+            unit.units = this.getTextUnits(line.lines, scriptsToExecute, blockId);
             units.push(unit);
           }
 
