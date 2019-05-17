@@ -192,6 +192,11 @@ export class GameManager {
     this.newGame();
   }
 
+  rewindTo(index: number) {
+    GameContext.dataSaver.rewindTo(index);
+    this.initGame(GameContext.init());
+  }
+
   clearGame() {
     GameContext.clearGame();
   }

@@ -158,6 +158,11 @@ export class IncrementalDataSaver {
         }
     }
 
+    rewindTo(index: number) {
+        this.currentStep.steps = this.currentStep.steps.slice(0, index + 1);
+        this.save();
+    }
+
     removeLast() {
         if (this.currentStep.steps.length > 1) {
             this.currentStep.steps.pop();
