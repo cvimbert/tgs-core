@@ -32,7 +32,8 @@ export class GameManager {
     // 2- Une partie est déjà lancée
     // dans ce cas, on chargé les données de la séquence en cours, pour initialisation dans ce contexte
 
-    if (alreadyLaunched && this.mode === GameMode.NORMAL) {
+
+    if (alreadyLaunched) {
       console.log("On a des données");
       this.loadGameFromSave();
     } else {
@@ -174,8 +175,7 @@ export class GameManager {
   loadGameFromSave() {
     //console.log(GameContext.dataSaver.currentStep);
 
-    // l'extraction des variables ne doit pas être fait ici, mais à chaque step
-    GameContext.extractVariables();
+    // console.log(this.mode);
     
     let sequenceId: string = GameContext.dataSaver.currentStep.sequenceId;
     this.loadFile(sequenceId).then(sequence => {
@@ -187,7 +187,13 @@ export class GameManager {
   resetGame() {
     //console.log("game reset");
     GameContext.clearGame();
+
+    // attention à la suppression de cette ligne. Utile ?
     this.newGame();
+  }
+
+  clearGame() {
+    GameContext.clearGame();
   }
 
   refreshGame() {

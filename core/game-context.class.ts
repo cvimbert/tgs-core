@@ -92,10 +92,6 @@ export class GameContext {
     this.initialized = false;
   }
 
-  static extractVariables() {
-    //this.variablesStore = this.dataSaver.getCurrentVariables();
-  }
-
   static getCurrentVariables(): {[key: string]: any} {
     return this.dataSaver.getCurrentVariables();
   }

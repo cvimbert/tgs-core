@@ -38,11 +38,11 @@ export class IncrementalDataSaver {
         let storageText: string = localStorage.getItem("steps");
         let logsText: string = localStorage.getItem("logs");
 
-        if (GameContext.displayMode === GameMode.NORMAL) {
+        // if (GameContext.displayMode === GameMode.NORMAL) {
             this.steps = (storageText && storageText !== "") ? JSON.parse(storageText) : [];
-        } else {
+        /* } else {
             this.steps = [];
-        }
+        } */
         
         this.logs = (logsText && logsText !== "") ? JSON.parse(logsText) : [];
     }
@@ -125,6 +125,10 @@ export class IncrementalDataSaver {
     }
 
     getVariable(variableName: string, sequenceIndex?: number, sequenceStepIndex?: number): any {
+
+        if (!this.steps || this.steps.length === 0) {
+            return;
+        }
 
         if (sequenceIndex === undefined) {
             sequenceIndex = this.steps.length - 1;

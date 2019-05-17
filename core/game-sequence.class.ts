@@ -10,9 +10,11 @@ import { ComplexCondition } from './complex-condition.class';
 
 export class GameSequence {
 
+  // Globaux
   scripts: {[key: string]: Script} = {};
   conditions: {[key: string]: Condition} = {};
 
+  // Dynamiques
   units: TextUnit[][] = [];
   links: LinkModel[];
 
