@@ -1,8 +1,6 @@
 import { GameStep } from "./interfaces/game-step.interface";
 import { SequenceStep } from "./interfaces/sequence-step.interface";
 import { LogItem } from "../data-interfaces/log-item.interface";
-import { GameContext } from '../game-context.class';
-import { GameMode } from '../game-mode.enum';
 
 export class IncrementalDataSaver {
 
@@ -82,7 +80,8 @@ export class IncrementalDataSaver {
             this.currentStep = {
                 sequenceId: sequenceId,
                 steps: [],
-                variables: {}
+                variables: {},
+                localVariables: {}
             };
     
             this.steps.push(this.currentStep);
@@ -93,21 +92,26 @@ export class IncrementalDataSaver {
 
         this.currentStep.steps.push({
             blockId: blockId,
-            variables: {}
+            variables: {},
+            localVariables: {}
         });
 
         //console.log("variables", this.getCurrentVariables());
     }
 
+    isVariableLocal(variableName: string): boolean {
+        return variableName.match("^local\.") !== null;
+    }
+
     setVariable(name: string, value: any) {
 
         let lastSequenceStep = this.lastSequenceStep;
+        let isLocal = this.isVariableLocal(name);
 
-        if (lastSequenceStep) {
-            lastSequenceStep.variables[name] = value;
-        } else {
-            this.currentStep.variables[name] = value;
-        }
+        let step: SequenceStep | GameStep = lastSequenceStep ? lastSequenceStep : this.currentStep;
+        let storageObject = isLocal ? step.localVariables : step.variables;
+
+        storageObject[name] = value;
     }
 
     getCurrentVariables(): {[key: string]: any} {
@@ -126,6 +130,8 @@ export class IncrementalDataSaver {
 
     getVariable(variableName: string, sequenceIndex?: number, sequenceStepIndex?: number): any {
 
+        let isLocal = this.isVariableLocal(variableName);
+
         if (!this.steps || this.steps.length === 0) {
             return;
         }
@@ -143,13 +149,18 @@ export class IncrementalDataSaver {
         for (let i: number = sequenceIndex; i >= 0; i--) {
 
             for (let j: number = startStep; j >= 0; j--) {
-                if (this.steps[i].steps[j].variables[variableName] !== undefined) {
-                    return this.steps[i].steps[j].variables[variableName];
+
+                let provider = isLocal ? this.steps[i].steps[j].localVariables : this.steps[i].steps[j].variables;
+
+                if (provider[variableName] !== undefined) {
+                    return provider[variableName];
                 }
             }
 
-            if (this.steps[i].variables[variableName] !== undefined) {
-                return this.steps[i].variables[variableName];
+            let provider = isLocal ? this.steps[i].localVariables : this.steps[i].variables;
+
+            if (provider[variableName] !== undefined) {
+                return provider[variableName];
             }
 
             if (i > 0) {
